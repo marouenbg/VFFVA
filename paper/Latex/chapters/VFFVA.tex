@@ -1,0 +1,223 @@
+\noindent \large \textbf{Dynamic load balancing enables fast and parallel computation of large-scale metabolic models.}\\
+{\setstretch{1.0} \textit{Marouen Ben Guebila\footnote{Molecular Systems Physiology, Luxembourg Centre for Systems Biomedicine, University of Luxembourg, Esch-sur-Alzette, Luxembourg.} and Ines Thiele\textsuperscript{1}.} \par}%Paper reference, note, other. Can remove. Single line space.
+\section*{Abstract}
+{\setstretch{1.0}  
+Genome-scale metabolic models (GSMMs) of living organisms are used in a wide variety of applications pertaining to health and bioengineering. They are formulated as LP problems that are oftentimes under-determined. FVA characterizes the alternate optimal solution (AOS) space enabling thereby the assessment of the solution's robustness. fastFVA (FFVA), the C implementation of MATLAB FVA, allowed to gain substantial speed up, although the parallelism was managed through MATLAB. We present veryfastFVA (VFFVA), a pure C implementation of FVA, that relies on a hybrid MPI/OpenMP management of parallelism. The flexibility of VFFVA allowed to gain consequent speedup factors and to decrease memory usage 14 fold in comparison to FFVA. Finally, VFFVA allows to process a higher number of GSMMs in faster times accelerating thereby biomedical modeling and simulation.
+\par}%single line space
+
+\newpage
+\section*{Introduction}
+Modeling and simulation of biological systems gained tremendous interest thanks to the increasing predictive ability of the modeled systems in healthcare and in the biotechnology industry \cite{gottstein2016constraint,oyaas2017genome}. Microbial and human systems are most amenable to modeling given the wealth of data in the literature along with the development of computational methods. \\
+Particularly, COBRA methods enable the reconstruction of the metabolism of biological systems \textit{in silico} as linear programs \cite{o2015using}. Subsequently, an objective function of the system is formulated and optimized for e.g., biomass yield, metabolite production. Although the objective is uniquely determined, the set of corresponding solutions forms the space of alternate optimal solutions (AOS) that describe the possible conditions in which the optimal objective is achievable. The AOS space is quantified using flux variability analysis (FVA) \cite{mahadevan2003effects}, which provides a range of minimum and maximum values for each variable of the system. Biologically, these values overlap with the fitness of a given system to achieve optimality and allow to validate the metabolic phenotype through matching the empirical ranges with the FVA bounds.
+fastFVA (FFVA) \cite{gudmundsson2010computationally}, a recent implementation of FVA gained tremendously in speed over the \texttt{fluxvariability} COBRA toolbox MATLAB function \cite{becker2007quantitative}. Two main improvements were the driving factor of the gained efficiency: first, the C implementation of FVA which allowed a higher flexibility using the CPLEX C API in comparison to MATLAB. The second was the use of the same LP object, which avoided solving the problem from scratch in every iteration, thereby saving presolve time. FFVA is compiled as MATLAB Executable (MEX) file, that can be called from MATLAB directly.\\
+Yet, given the exponentially growing size of the metabolic models, FFVA is ran in parallel in most cases. Parallelism simply relies on allocating the cores through MATLAB \texttt{parpool} function and running the iterations through \texttt{parfor} loop. The load is statically balanced over the workers such as they process an equal amount of iterations. Nevertheless, the solution time varies greatly between LPs which does not guarantee an equal processing time among the workers in static load balancing. Oftentimes, the workers that were assigned a set of fast-solving LPs, process their chunk of iterations and stay idle, waiting to synchronize with the remaining workers, which can result in less efficient run times.
+We present veryfastFVA (VFFVA), a pure C implementation of FVA, that has a lower level management of parallelism over FFVA. The program is provided as a standalone, that does not rely on MATLAB thereby offering an open source alternative for constraint-based biological analysis. The major contribution lies in the management of parallelism through a hybrid OpenMP/MPI, for shared memory and non-shared memory systems respectively, which offers great flexibility and speedup over the existing implementations. While keeping the up-mentioned advantages of FFVA, load balancing in VFFVA was scheduled dynamically \cite{suss2008common} in a way to guarantee equal run times between the workers. The input does not rely on MATLAB anymore as the LP problem is read in the industry standard $.mps$ file, that can be also obtained from the classical $.mat$ files through a provided converter. The improvements in the implementation allowed to speed up the analysis by a factor of three  and reduced memory requirements 14 fold in comparison to FFVA and the Julia-based distributedFBA implementation \cite{heirendt2016distributedfba}, in a similar parallel setting.\\
+Taken together, as metabolic models are steadily growing in number and complexity, their analysis requires the design of efficient tools. VFFVA allows to make the most of modern machines specifications in order to run a greater amount of simulation in less time thereby enabling biological discovery. 
+\section*{Material and methods}
+\subsection*{Flux variability analysis}
+The LP problem representing the metabolic model has $n$ reactions that are bounded by lower bound $lb_{(n,1)}$ and upper bound $ub_{(n,1)}$ vectors.  The matrix $S_{(m,n)}$ represents the stoichiometric coefficients of each of the $m$ metabolites involved in the $n$ reactions. The system is usually constrained by $S.v=0$ to represent the steady-state, also referred to as Flux Balance Analysis (FBA) \cite{orth2010flux}. An initial LP optimizes for the objective function of the system to obtain a unique optimum e.g., biomass maximization, like the following:
+\begin{equation} \label{eq:one}
+\begin{array}{ll@{}ll}
+\text{maximize}  & \displaystyle\ Z_{biomass}=c^{T}_{biomass}v &\\
+\text{subject to}\\
+& S.v=0 \\
+& lb<v<ub
+\end{array}
+\end{equation}
+The system being under-determined $(m<n)$, there can be an infinity of solution vectors $v_{(n,1)}$ that satisfy the unique optimal objective $(c^{T}v)$, with $c_{(n,1)}$ as the objective coefficient vector. In order to delineate the AOS space, the objective function is set to its optimal value, and the $n$ dimensions of the problem are iterated over. Consequently, each of the reactions is set as a new objective function and is maximized and minimized for. The total number of LPs is then equal to $2n$. The problem is described as the following:
+\begin{equation} \label{eq:two}
+\begin{array}{ll@{}ll@{}ll}
+\text{iterate over} & i \in \displaystyle\ [1,n] &\\
+& \text{set} & \displaystyle\ c_{i}=1 &\\
+& \text{max/min}  & \displaystyle\ Z_{i}=c^{T}v &\\
+& \text{subject to}\\
+& & S.v=0 \\
+& & c^{T}_{biomass}v=Z_{biomass} \\
+& & lb<v<ub
+\end{array}
+\end{equation}
+The obtained minimum and maximum objective value for each dimension defines the range of optimal solutions.
+\subsection*{Management of parallelism}
+Problem~\ref{eq:two} is entirely parallelizable through allocating the $2n$ LPs among the available workers. The strategy used so far in the existing implementations was to divide $2n$ equally among the workers. Although, the solution time can vary widely between LPs and ill-conditioned LPs have a higher convergence time. Dividing equally the LPs among the workers does not ensure an equal load on each worker. \\
+In shared memory systems, Open Multi-Processing (OpenMP) library allows to balance the load among the threads dynamically such that every instruction runs for an equal amount of time. Since it is challenging to estimate \textit{a priori} the run time of an LP, the load has to be adjusted dynamically, depending on the chunks of the problem processed by every thread. In the beginning of the process, the scheduler will divide the original problem in chunks and will assign the workers a chunk of iterations to process. Each worker that completes the assigend chunk will receive a new one, until all the LPs are processed.\\
+In systems that do not share memory, Message Passing Interface (MPI) was used to create instances of Problem~\ref{eq:two}. Every process then calls the shared memory execution through OpenMP.\\
+In the end, the final program is comprised of a hybrid MPI/OpenMP implementation of parallelism which allows a great flexibility of usage, particularly in High Performance Computing (HPC) setting.
+\subsection*{Another application: generation of warmup points}
+The uniform sampling of metabolic models is a common unbiased tool to characterize the solution space and determine the flux distribution per reaction \cite{bordel2010sampling,megchelenbrink2014optgpsampler}. Sampling starts from pre-computed solutions called warmup points, from which the sampling chains start exploring the solution space. The generation of $p \geq 2n$ warmup points is done in a similar fashion to FVA. The first $2n$ points are actually solutions of the FVA problem, while the points $\geq 2n$ are solutions corresponding to a randomly generated coefficient vector $c$. Another difference with FVA, lies in the storage of the solutions $v$ rather than the optimal objective $c^{T}v$. We compared the generation of 30,000 warmup points using the COBRA toolbox function createWarmup\textsubscript{MATLAB}  and a dynamically load-balanced C implementation createWarmup\textsubscript{VF}.
+\subsection*{Model description}
+A selection of models \cite{gudmundsson2010computationally} was tested on FFVA and VFFVA. The models (Table \ref{tbl:VFFVAmodels}) are characterized by the dimensions of the stoichiometric matrix $S_{m,n}$. Each of them represent the metabolism of human and bacterial systems.
+Models pertaining to the same biological system with different $S$ matrix size, have different levels of granularity and biological complexity.
+\begin{table}[h]
+\caption[Model size and description.]{Model size and description.}
+\begin{center}
+	\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} lll}
+    \hline
+    Model & Organism & Size \\ \hline
+    Ecoli\textunderscore core & \textit{Escherischia coli} & (72,95)  \\ \hline
+    P\_putida & \textit{Pseudomonas putida} & (911,1060)  \\ \hline
+	EcoliK12 & \textit{Escherischia coli} & (1668,2382) \\ \hline    
+    Recon2 & \textit{Homo sapiens} & (4036,7324)  \\ \hline
+    E\textunderscore Matrix & \textit{Escherischia coli} & (11991,13694)  \\ \hline
+    E\textsubscript{c}\textunderscore Matrix & \textit{Escherischia coli} & (13047,13726)  \\ \hline  
+    Harvey & \textit{Homo sapiens} & (157056,80016)  \\ \hline  
+    \end{tabular*}
+\end{center}
+\label{tbl:VFFVAmodels}%descriptive label to refer to figure in text
+\end{table}
+\subsection*{Hardware and software}
+VFFVA and createWarmup\textsubscript{VF} were run on a Dell HPC machine with 72 Intel Xeon E5 2.3GHz cores and 768 GigaBytes of memory. The current implementation was tested with Open MPI v1.10.3, OpenMP 3.1, GCC 4.7.3 and IBM ILOG CPLEX academic version (12.6.3). FFVA and createWarmup\textsubscript{MATLAB} were tested with MATLAB 2014b and distributedFBA was run on Julia v0.5. ILOG CPLEX was called with the following parameters:
+\begin{equation*} \label{eq:one}
+\begin{array}{ll@{}ll}
+\texttt{PARALLELMODE=1} &\\
+\texttt{THREADS=1} &\\
+\texttt{AUXROOTTHREADS=2} &\\
+\end{array}
+\end{equation*}
+Additionally, large scale coupled models with scaling infeasibilites might require 
+\begin{equation*} \label{eq:one}
+\begin{array}{ll@{}ll}
+\texttt{SCAIND=-1} &\\
+\end{array}
+\end{equation*}
+The call to VFFVA is done from bash as follows:\\
+\texttt{mpirun -np \textless nproc\textgreater \hspace{0.1cm} -\hspace{0.05cm}-bind-to none -x OMP\_NUM\_THREADS=\textless nthr\textgreater \hspace{0.1cm} ./veryfastFVA \textless model.mps\textgreater \hspace{0.1cm} \textless scaling\textgreater}\\
+,with $nproc$ is the number of non-shared memory processes, $nthr$ is the number of shared memory threads, $scaling$ is CPLEX scaling parameter where 0 leaves it to the default (equilibration) and -1 sets it to unscaling. createWarmup\textsubscript{VF} was called in a similar fashion:\\
+\texttt{mpirun -np \textless nproc\textgreater \hspace{0.1cm}  -\hspace{0.05cm}-bind-to none -x OMP\_NUM\_THREADS=\textless nthr\textgreater \hspace{0.1cm}\\ ./createWarmupPts \textless model.mps\textgreater \hspace{0.1cm} \textless scaling\textgreater}\\
+For large models, OpenMP threads were bound to physical cores through setting the environment variable 
+\begin{equation*} \label{eq:one}
+\begin{array}{ll@{}ll}
+\texttt{OMP\_PROC\_BIND=TRUE} &\\
+\end{array}
+\end{equation*}
+while for small models, setting the variable to \texttt{FALSE}  yielded faster run times.
+The schedule is set through the environment variable
+\begin{equation*} \label{eq:one}
+\begin{array}{ll@{}ll}
+\texttt{OMP\_SCHEDULE=<schedule,chunk>} &\\
+\end{array}
+\end{equation*}
+where \texttt{schedule} can be \texttt{static}, \texttt{dynamic} or \texttt{guided}, and \texttt{chunk} is the minimal number of iterations processed per worker at a time.
+\subsection*{Other possible implementations}
+The presented software can be implemented in Fortran since the library OpenMP is supported as well. Additionally, Python's mutliprocessing library allows to dynamically load balance tasks between non-shared memory processes, but the parallelism inside one process is often limited to one thread by the Global Interpreter Lock (GIL). This limitation could be circumvented through using OpenMP and Cython \cite{behnel2011cython}. The advantage of VFFVA lies in the implementation of two levels of parallelism following a hierarchical model where MPI processes are at a top-level and OpenMP threads at a lower level. The MPI processes manage the coarse-grain parallelism and OpenMP threads manage the finer-grained tasks that share memory and avoid copying the original problem, which increases performance and saves consequent memory. This architecture adapts very well with modern distributed hardware in HPC setting.\\
+\section*{Results}
+The OpenMP/MPI hybrid implementation of VFFVA allowed to gain important speedup factors over the static load balancing in the MATLAB implementation. In this section, we benchmarked the run times of VFFVA in comparison to FFVA at different settings then we compared different strategies of load balancing and their impact on the run time per worker. While in FFVA the authors benchmarked serial runs \cite{gudmundsson2010computationally}, in the present work, the emphasis was placed upon parallel run times.
+\subsection*{Parallel construct in a hybrid OpenMP/MPI setting} 
+The MATLAB implementation of parallelism through the parallel computing toolbox provides great ease-of-use, wherein two commands only are required to allocate and launch parallel jobs. Also, it saves the user the burden of finding out if the jobs are run on memory sharing systems or not. VFFVA provides the user with a similar level of flexibility as it supports both types of systems. In addition, it allows to access advanced features of OpenMP and MPI such as dynamic load balancing. The algorithm starts first by assigning chunks of iterations to every CPU (Figure \ref{fig:hybrid.}), in which a user defined number of threads simultaneously processes the iterations. At the end, the CPUs synchronize and pass the result vector to the master CPU to reduce them to the final vector. \\
+The main contributions of VFFVA are the complete use of C, which impacted mainly the computing time of small models $(n<3000)$ and the dynamic load balancing that was the main speedup factor for larger models.
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{VFFVA/figures/figure1/scheme.eps}
+\caption[Hybrid OpenMP/MPI implementation of FVA.]{Hybrid OpenMP/MPI implementation of FVA ensures two levels of parallelism. The distribution of tasks is implemented following a hierarchical model where MPI manages coarse-graine parallelism in non-shared memory systems and OpenMP processes within each MPI process manage fine-grain parallelism taking advantage of the shared memory to improve performance.}
+\label{fig:hybrid.}
+\end{figure}
+\subsection*{Impact on computing small models}
+We run VFFVA and FFVA five times on small models i.e., Ecoli\_core, EcoliK12, P\_putida. VFFVA had at least 20 fold speedup (Table \ref{tbl:VFFVAmodelComp}). The main contributing factor was the use of C over MATLAB in all steps of the analysis. In particular, the loading time of MATLAB java machine and the assignment of workers through \texttt{parpool} was much greater than the analysis time itself.\\
+The result highlighted the power of C in gaining computing speed, through managing the different low-level aspects of memory allocation and variable declaration.\\
+In the analysis of large models, where MATLAB loading time becomes less significant, dynamic load balancing becomes the main driving factor of the gained speedup.\\ 
+\begin{table}[h]
+\caption[Comparison of run times of FFVA and VFFVA in small models.]{Comparison of run times of FFVA and VFFVA in small models in seconds.}
+\begin{center}
+    \begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} llll}
+    \hline
+    Model & \pbox{2cm}{FFVA \\ mean(std) \\ loading and analysis time} & \pbox{2cm}{VFFVA \\ mean(std) \\ loading and analysis time} & \pbox{1.5cm}{FFVA \\ mean(std) \\ analysis only} \\ \hline
+    \multicolumn{4}{c}{2 cores} \\ \hline
+    Ecoli\textunderscore core & 19.5(0.5)  & 0.2(0.01) & 0.37(0.1) \\ \hline
+	P\_putida & 19.2(0.7) & 0.6(0.02) & 0.81(0.09) \\ \hline    
+    EcoliK12 & 20.4(0.6) & 2.2(0.06) & 2.41(0.09)\\ \hline
+        \multicolumn{4}{c}{4 cores} \\ \hline
+    Ecoli\textunderscore core & 19.6(0.6)  & 0.2(0.005) & 0.32(0.01) \\ \hline
+    P\_putida & 19.4(1) &  0.5(0.02) & 0.61(0.01) \\ \hline
+    EcoliK12 & 20(0.8) & 1.3(0.04) & 1.64(0.08)\\ \hline
+        \multicolumn{4}{c}{8 cores} \\ \hline
+    Ecoli\textunderscore core & 19.4(0.5)  & 0.2(0.03) & 0.35(0.05)  \\ \hline
+    P\_putida & 19.6(0.7) & 0.4(0.04) & 0.53(0.009) \\ \hline
+    EcoliK12 & 20(0.49) & 0.9(0.01) & 1.22(0.08)\\ \hline
+        \multicolumn{4}{c}{16 cores} \\ \hline
+    Ecoli\textunderscore core &  20.2(0.4) & 0.2(0.008) & 0.41(0.05) \\ \hline
+    P\_putida & 19.5(0.4) & 0.4(0.04) & 0.51(0.03) \\ \hline
+    EcoliK12 & 22(0.7) & 0.7(0.01) & 0.87(0.03)\\ \hline
+        \multicolumn{4}{c}{32 cores} \\ \hline
+    Ecoli\textunderscore core & 22.2(0.4)  & 0.3(0.008) & 0.6(0.12)\\ \hline
+    P\_putida & 21.5(0.6) &  0.4(0.01) & 0.53(0.004)\\ \hline
+    EcoliK12 & 21.5(0.6) & 0.6(0.03) & 0.78(0.04)\\ \hline
+    \end{tabular*}
+\end{center}
+\label{tbl:VFFVAmodelComp}%descriptive label to refer to figure in text
+\end{table}
+\subsection*{Impact on computing large models}
+The speedup gained on computing large models (Recon2 and E\_Matrix) reached three folds with VFFVA (Figure \ref{fig:largemodel.}) at 32 threads with Recon 2 (35.17$s$ vs 10.3$s$) and E\_Matrix (44$s$ vs 14.7$s$). In fact, with dynamic load balancing, VFFVA allowed to update the assigned chunks of iterations to every worker dynamically, which guarantees an equal distribution of the load. In this case, the workers that get fast-solving LPs, will get a larger number of iterations assigned, while those that get ill-conditioned LPs and require more time to solve them, will get fewer LPs in total, in such way that all workers synchronize at the same time to reduce the results. Particularly, the speedup achieved with VFFVA increased with the size of the models and the number of threads (Figure \ref{fig:largemodel.}-E\textunderscore Matrix). 
+Finally, we further explored the different load balancing startegies (static, guided and dynamic) with two of the largest models (E\textsubscript{c}\textunderscore Matrix and Harvey).
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{VFFVA/figures/figure2/largemodels.eps}
+\caption[Run times of Recon2 and E\textunderscore Matrix model.]{Run times of Recon2 and E\_Matrix model using FFVA and VFFVA on 2,4,8,16, and 32 threads. The guided schedule was used in the benchmarking.}
+\label{fig:largemodel.}
+\end{figure}
+\subsection*{Load management}
+Load management describes the different approaches to assign iterations to the workers. It can be static, where an even number of iterations is assigned to each worker. Guided schedule refers to dividing the iterations in chunks of size $n/workers$ initially and $remaining\textunderscore{iterations}/workers$ afterwards. The difference with static lies in the dynamic assignment of chunks, in a way that fast workers can process more iteration blocks. Finally, dynamic schedule is very similar to guided except that chunk size is given by the user, which allows a greater flexibility. In the following section, we will compare the load balancing strategies of E\textsubscript{c}\textunderscore Matrix and Harvey models.\\
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{VFFVA/figures/figure3/schedule.png}
+\caption[Run times of E\textsubscript{c}\textunderscore Matrix model.]{Run times of E\textsubscript{c}\textunderscore Matrix model. A-Run times of E\textsubscript{c}\textunderscore Matrix model at 2,4,8,16, and 32 threads using FFVA and VFFVA. B-Run time per worker in the static, guided, and dynamic schedule using 16 threads. C-The number of iterations processed per worker in the static, guided, and dynamic schedule using 16 threads.}
+\label{fig:static.}
+\end{figure}
+\subsubsection*{Static schedule}
+Using static schedule, VFFVA assigned an equal number of iterations to every worker. With 16 threads, the number of iterations per worker equalled 1715 and 1716 (Figure \ref{fig:static.}-C). Expectedly, the run time varied widely between workers (Figure \ref{fig:static.}-B) and resulted in a final time of 393$s$.
+\subsubsection*{Guided schedule}
+With guided schedule (Figure \ref{fig:static.}-A), the highest speedup (2.9) was achieved with 16 threads (Figure \ref{fig:static.}-B). The run time per worker was quite comparable and the iterations processed varied between 719 and 2581. The final run time was 281$s$.
+\subsubsection*{Dynamic schedule}
+Using a dynamic load balancing with a chunk size of 50 resulted in similar results to the guided schedule. The final run time equalled 197$s$, while FFVA took 581$s$. An optimal chunk size has to be small enough to ensure a frequent update on the workers load, and big enough to take advantage of the solution basis reuse in every worker. At a chunk size of 1 i.e. each worker is assigned 1 iteration at a time, the final solution time equalled 272$s$. The reason being that if the worker is updated quite often with new pieces of iterations, then it looses the stored solution basis of the previous problem and has to solve from scratch.\\ 
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{VFFVA/figures/figure4/harvey.png}
+\caption[Run times per worker of Harvey model.]{Run times per worker of Harvey model. A- Total run time of the different load balancing schedules at 8, 16, and 32 threads. B-Run time per worker as a function of the number of iterations processed using the guided schedule and the dynamic schedule with chunk size of 50, 100, and 500 with 8 threads, C-16 threads, and D-32 threads.}
+\label{fig:harvey.}
+\end{figure}
+Similarly, Harvey model \cite{thiele2018metabolism} (Figure \ref{fig:harvey.}-A) had a 2-fold speedup with 16 threads using a chunk size of 50 (806 mn) compared to FFVA (1611 mn). The run times with guided schedule (905 mn), dynamic schedule with chunk size 100 (850 mn) and chunk size 500 (851 mn) were less efficient due to the slower update rate leading to a variable analysis time per worker (Figure \ref{fig:harvey.}-B,C,D). VFFVA on 8 threads (1323 mn with chunk size 50) proved comparable to FFVA (1214 mn) and distributedFBA (1182 mn) on 16 threads, thereby saving computational resources and time. 
+\subsection*{Impact on memory usage}
+In MATLAB, the execution of $j$ parallel jobs implies launching $j$ instances of MATLAB. On average, one instance needs 2 Gb. In parallel setting, the memory requirements are at minimum $2j$ Gb, which can limit the execution of highly parallel jobs. In the Julia-based distributedFBA, the overall memory requirement exceeded 15 Gb at 32 cores. VFFVA requires only the memory necessary to load $j$ instances of the input model, which corresponds to the MPI processes as the OpenMP threads save additional memory through sharing one instance of the model. The differences between the FFVA and VFFVA get more pronounced as the number of threads increases (Figure \ref{fig:memory.}) i.e., 13.5 fold at 8 threads, 14.2 fold at 16 threads, and 14.7 fold at 32 threads.\\
+Finally, VFFVA outran FFVA and distributedFBA both on execution time and memory requirements (Table \ref{tbl:VFFVAalgocomp}). The advantage becomes important with larger models and higher number of threads, which makes VFFVA particularly suited for analysing the exponentially-growing-in-size metabolic models in HPC setting.
+\begin{table}[h]
+\caption[Comparative summary of the methods' features.]{Comparative summary of the methods' features.}
+\begin{center}
+    \begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} lllll}
+    \hline
+    Feature & VFFVA & distributedFBA & FFVA & FVA \\ \hline
+    Speed & ++++ & +++ & ++ & + \\ \hline
+    Memory & +++ & ++ & + & + \\ \hline 
+    Load balancing & dynamic & static & static & static \\ \hline 
+    \end{tabular*}
+\end{center}
+\label{tbl:VFFVAalgocomp}%descriptive label to refer to figure in text
+\end{table}
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{VFFVA/figures/figure5/memoryUsage.eps}
+\caption[Physical memory usage at 8, 16, and 32 threads.]{Physical memory usage at 8, 16, and 32 threads using FFVA, VFFVA, and distributedFBA.}
+\label{fig:memory.}
+\end{figure}
+\subsection*{Creation of warmup points for sampling}
+We compared the generation of 30,000 warmup points using the COBRA toolbox function createWarmup\textsubscript{MATLAB}  and a dynamically load-balanced C implementation createWarmup\textsubscript{VF} on a set of models (Table \ref{tbl:VFwarmup}). Since the COBRA toolbox implementation does not support parallelism, we run it on a single core and divided the run time by the number of cores to obtain an optimistic approximation of the parallel run times. The speedup achieved varied between four up to a factor of 100 in the different models (Table \ref{tbl:VFwarmup}). Similarly to FFVA \cite{gudmundsson2010computationally}, the main factor for the speedup was the C implementation that allowed the reuse of the LP object in every iteration and save presolve time. Equally, the dynamic load balancing between workers ensured a fast convergence time.\\
+Taken together, the dynamic load balancing strategy allows the efficient parallel solving of metabolic models through accelerating the computation of FVA and the fast preprocessing of sampling points thereby enabling the modeller to tackle large-scale metabolic models.
+\begin{table}[!htp]
+\caption[Generation of sampling warmup points using dynamic load balancing.]{Generation of sampling warmup points using dynamic load balancing.}
+\begin{center}
+    \begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} llllllll}
+    \hline
+    Model &createWarmup\textsubscript{MATLAB} & \multicolumn{6}{c}{createWarmup\textsubscript{VF}}\\ \hline
+    Cores&1&1&2&4&8&16&32 \\ \hline
+    Ecoli\textunderscore core & 149 & 2.8 &1.8 & 0.8 & 0.7 & 0.5 & 0.5 \\ \hline
+	P\_putida & 385& 12.5 & 13 & 8 & 4 & 2 & 2 \\ \hline    
+    EcoliK12 & 801& 49 & 43 & 23 & 10.4 & 9.5 & 9.1 \\ \hline
+    Recon2 & 11346& 288 & 186  & 30 & 32 & 24 & 21 \\ \hline
+    E\_Matrix & NA\textsuperscript{*}& 602 & 508 & 130 & 52 & 43 & 43 \\ \hline
+    E\textsubscript{c}\_Matrix & NA\textsuperscript{*} & 5275 & 4986 & 924 & 224 & 118  & 117  \\ \hline
+    \end{tabular*}
+\end{center}
+\caption*{\textsuperscript{*} The generation of warmup points of E\_Matrix and E\textsubscript{c}\_Matrix models did not converge after 20000 $s$. The creation of warmup points can vary widely between runs as it involves the generation of a random $c$ vector in the linear program. The runs were repeated three times and the average was reported. }
+\label{tbl:VFwarmup}%descriptive label to refer to figure in text
+\end{table}
+\section*{Acknowledgements}
+The authors would like to acknowledge fastFVA authors for publicly sharing their code, IBM for providing a free academic version of ILOG CPLEX as well as Valentin Plugaru and Dr. Laurent Heirendt at the University of Luxembourg, for useful comments and guidance. The experiments presented in this paper were partly carried out
+using the HPC facilities of the University of Luxembourg~\cite{VBCG_HPCS14} 
+{\small -- see \url{http://hpc.uni.lu}}.
