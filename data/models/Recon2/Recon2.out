@@ -1,0 +1,570 @@
+
+                                                                               < M A T L A B (R) >
+                                                                     Copyright 1984-2014 The MathWorks, Inc.
+                                                                       R2014a (8.3.0.532) 64-bit (glnxa64)
+                                                                                February 11, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+Starting parallel pool (parpool) using the 'local' profile ... connected to 32 workers.
+
+-- Warning:: You may only ouput 4, 7 or 9 variables.
+
+ >> Solving Model.S. (uncoupled) 
+ >> The number of arguments is: input: 7, output 2.
+ >> Size of stoichiometric matrix: (4036,7324)
+ >> All the 7324 reactions are solved.
+ >> 0 reactions out of 7324 are minimized (0.00%).
+ >> 0 reactions out of 7324 are maximized (0.00%).
+ >> 7324 reactions out of 7324 are minimized and maximized (100.00%).
+
+ -- Starting to loop through the 32 workers. -- 
+
+ -- The splitting strategy is 0. -- 
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 12 / 32 (LoopID = 18) <> [3894, 4122] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:55 2017
+ >> Time spent in FVAc: 1.6 seconds.
+----------------------------------------------------------------------------------
+ ==> 3.1% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 2 / 32 (LoopID = 19) <> [4123, 4351] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:56 2017
+ >> Time spent in FVAc: 2.5 seconds.
+----------------------------------------------------------------------------------
+ ==> 6.2% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 9 / 32 (LoopID = 30) <> [6641, 6868] / [4036, 7324].
+ >> Number of reactions given to the worker: 228 
+ >> The number of reactions retrieved is 228
+ -- Start time:     Fri Jan 27 10:45:54 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 228.
+        -- Maximization (iRound = 1). Number of reactions: 228.
+ -- End time:     Fri Jan 27 10:45:56 2017
+ >> Time spent in FVAc: 2.2 seconds.
+----------------------------------------------------------------------------------
+ ==> 9.4% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 4 / 32 (LoopID = 6) <> [1146, 1374] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:56 2017
+ >> Time spent in FVAc: 3.4 seconds.
+----------------------------------------------------------------------------------
+ ==> 12.5% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 19 / 32 (LoopID = 29) <> [6413, 6640] / [4036, 7324].
+ >> Number of reactions given to the worker: 228 
+ >> The number of reactions retrieved is 228
+ -- Start time:     Fri Jan 27 10:45:54 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 228.
+        -- Maximization (iRound = 1). Number of reactions: 228.
+ -- End time:     Fri Jan 27 10:45:56 2017
+ >> Time spent in FVAc: 2.6 seconds.
+----------------------------------------------------------------------------------
+ ==> 15.6% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 14 / 32 (LoopID = 28) <> [6184, 6412] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:54 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:57 2017
+ >> Time spent in FVAc: 3.0 seconds.
+----------------------------------------------------------------------------------
+ ==> 18.8% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 31 / 32 (LoopID = 26) <> [5726, 5954] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:57 2017
+ >> Time spent in FVAc: 3.2 seconds.
+----------------------------------------------------------------------------------
+ ==> 21.9% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 3 / 32 (LoopID = 17) <> [3665, 3893] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:57 2017
+ >> Time spent in FVAc: 3.9 seconds.
+----------------------------------------------------------------------------------
+ ==> 25.0% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 10 / 32 (LoopID = 31) <> [6869, 7096] / [4036, 7324].
+ >> Number of reactions given to the worker: 228 
+ >> The number of reactions retrieved is 228
+ -- Start time:     Fri Jan 27 10:45:54 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 228.
+        -- Maximization (iRound = 1). Number of reactions: 228.
+ -- End time:     Fri Jan 27 10:45:57 2017
+ >> Time spent in FVAc: 3.5 seconds.
+----------------------------------------------------------------------------------
+ ==> 28.1% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 22 / 32 (LoopID = 27) <> [5955, 6183] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:54 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:57 2017
+ >> Time spent in FVAc: 3.8 seconds.
+----------------------------------------------------------------------------------
+ ==> 31.2% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 7 / 32 (LoopID = 5) <> [917, 1145] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:57 2017
+ >> Time spent in FVAc: 4.8 seconds.
+----------------------------------------------------------------------------------
+ ==> 34.4% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 27 / 32 (LoopID = 25) <> [5497, 5725] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:54 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:58 2017
+ >> Time spent in FVAc: 3.9 seconds.
+----------------------------------------------------------------------------------
+ ==> 37.5% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 16 / 32 (LoopID = 24) <> [5268, 5496] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:59 2017
+ >> Time spent in FVAc: 5.5 seconds.
+----------------------------------------------------------------------------------
+ ==> 40.6% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 30 / 32 (LoopID = 21) <> [4581, 4809] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:59 2017
+ >> Time spent in FVAc: 5.8 seconds.
+----------------------------------------------------------------------------------
+ ==> 43.8% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 23 / 32 (LoopID = 8) <> [1604, 1832] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:45:59 2017
+ >> Time spent in FVAc: 6.6 seconds.
+----------------------------------------------------------------------------------
+ ==> 46.9% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 1 / 32 (LoopID = 13) <> [2749, 2977] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:00 2017
+ >> Time spent in FVAc: 6.7 seconds.
+----------------------------------------------------------------------------------
+ ==> 50.0% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 13 / 32 (LoopID = 2) <> [230, 458] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:00 2017
+ >> Time spent in FVAc: 7.3 seconds.
+----------------------------------------------------------------------------------
+ ==> 53.1% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 6 / 32 (LoopID = 32) <> [7097, 7324] / [4036, 7324].
+ >> Number of reactions given to the worker: 228 
+ >> The number of reactions retrieved is 228
+ -- Start time:     Fri Jan 27 10:45:54 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 228.
+        -- Maximization (iRound = 1). Number of reactions: 228.
+ -- End time:     Fri Jan 27 10:46:00 2017
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 28 / 32 (LoopID = 3) <> [459, 687] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:00 2017
+ >> Time spent in FVAc: 6.0 seconds.
+----------------------------------------------------------------------------------
+ ==> 56.2% done. Please wait ...
+ >> Time spent in FVAc: 7.3 seconds.
+----------------------------------------------------------------------------------
+ ==> 59.4% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 11 / 32 (LoopID = 11) <> [2291, 2519] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:00 2017
+ >> Time spent in FVAc: 7.6 seconds.
+----------------------------------------------------------------------------------
+ ==> 62.5% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 32 / 32 (LoopID = 23) <> [5039, 5267] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:01 2017
+ >> Time spent in FVAc: 7.4 seconds.
+----------------------------------------------------------------------------------
+ ==> 65.6% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 24 / 32 (LoopID = 1) <> [1, 229] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:01 2017
+ >> Time spent in FVAc: 8.2 seconds.
+----------------------------------------------------------------------------------
+ ==> 68.8% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 21 / 32 (LoopID = 9) <> [1833, 2061] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:01 2017
+ >> Time spent in FVAc: 8.2 seconds.
+----------------------------------------------------------------------------------
+ ==> 71.9% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 5 / 32 (LoopID = 4) <> [688, 916] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:52 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:01 2017
+ >> Time spent in FVAc: 8.6 seconds.
+----------------------------------------------------------------------------------
+ ==> 75.0% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 25 / 32 (LoopID = 14) <> [2978, 3206] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:01 2017
+ >> Time spent in FVAc: 8.2 seconds.
+----------------------------------------------------------------------------------
+ ==> 78.1% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 8 / 32 (LoopID = 12) <> [2520, 2748] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:02 2017
+ >> Time spent in FVAc: 8.9 seconds.
+----------------------------------------------------------------------------------
+ ==> 81.2% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 15 / 32 (LoopID = 7) <> [1375, 1603] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:02 2017
+ >> Time spent in FVAc: 9.3 seconds.
+----------------------------------------------------------------------------------
+ ==> 84.4% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 17 / 32 (LoopID = 22) <> [4810, 5038] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:02 2017
+ >> Time spent in FVAc: 8.7 seconds.
+----------------------------------------------------------------------------------
+ ==> 87.5% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 29 / 32 (LoopID = 10) <> [2062, 2290] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:02 2017
+ >> Time spent in FVAc: 9.4 seconds.
+----------------------------------------------------------------------------------
+ ==> 90.6% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 20 / 32 (LoopID = 20) <> [4352, 4580] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:03 2017
+ >> Time spent in FVAc: 9.5 seconds.
+----------------------------------------------------------------------------------
+ ==> 93.8% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 18 / 32 (LoopID = 15) <> [3207, 3435] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:03 2017
+ >> Time spent in FVAc: 9.8 seconds.
+----------------------------------------------------------------------------------
+ ==> 96.9% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 26 / 32 (LoopID = 16) <> [3436, 3664] / [4036, 7324].
+ >> Number of reactions given to the worker: 229 
+ >> The number of reactions retrieved is 229
+ -- Start time:     Fri Jan 27 10:45:53 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 229.
+        -- Maximization (iRound = 1). Number of reactions: 229.
+ -- End time:     Fri Jan 27 10:46:04 2017
+ >> Time spent in FVAc: 10.8 seconds.
+----------------------------------------------------------------------------------
+ ==> 100% done. Analysis completed.
+Elapsed time is 13.133731 seconds.

@@ -1,0 +1,19 @@
+
+The model supplied is ../data/models/Recon2/Recon2.mps
+SCAIND parameter is -1
+Solution value  = 340.308216
+Solution status = 1
+Rounded solution at 90%  is 306.277394
+Solving 7324 reations !
+Objective index is 4828
+Number of threads = 8, Number of CPUs = 1
+
+Thread 5/8 of process 1/1 did 1900 iterations in 29.177845 s
+Thread 2/8 of process 1/1 did 2048 iterations in 29.253690 s
+Thread 7/8 of process 1/1 did 1850 iterations in 29.353066 s
+Thread 0/8 of process 1/1 did 1200 iterations in 29.400237 s
+Thread 4/8 of process 1/1 did 2350 iterations in 29.418133 s
+Thread 3/8 of process 1/1 did 1200 iterations in 29.477398 s
+Thread 6/8 of process 1/1 did 1950 iterations in 29.960687 s
+Thread 1/8 of process 1/1 did 2150 iterations in 30.679812 s
+FVA done in 31.16540 seconds.

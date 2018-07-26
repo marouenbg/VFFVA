@@ -1,0 +1,43 @@
+
+The model supplied is ../data/models/Ematrix_coupled/Ematrix_coupled.mps
+SCAIND parameter is -1
+Solution value  = 39.281721
+Solution status = 1
+Rounded solution at 90%  is 35.353550
+Solving 13726 reations !
+Objective index is 13185
+Number of threads = 32, Number of CPUs = 1
+
+Thread 3/32 of process 1/1 did 1700 iterations in 191.330560 s
+Thread 17/32 of process 1/1 did 2050 iterations in 191.545214 s
+Thread 28/32 of process 1/1 did 750 iterations in 191.740234 s
+Thread 10/32 of process 1/1 did 1900 iterations in 191.778574 s
+Thread 22/32 of process 1/1 did 1850 iterations in 191.788485 s
+Thread 5/32 of process 1/1 did 1126 iterations in 192.235347 s
+Thread 15/32 of process 1/1 did 1100 iterations in 192.281393 s
+Thread 24/32 of process 1/1 did 950 iterations in 192.555285 s
+Thread 19/32 of process 1/1 did 800 iterations in 192.577387 s
+Thread 1/32 of process 1/1 did 1000 iterations in 192.886604 s
+Thread 8/32 of process 1/1 did 1650 iterations in 193.277404 s
+Thread 16/32 of process 1/1 did 650 iterations in 193.314981 s
+Thread 25/32 of process 1/1 did 350 iterations in 193.538704 s
+Thread 0/32 of process 1/1 did 1800 iterations in 193.665091 s
+Thread 23/32 of process 1/1 did 626 iterations in 193.768770 s
+Thread 31/32 of process 1/1 did 500 iterations in 194.564997 s
+Thread 11/32 of process 1/1 did 700 iterations in 194.750372 s
+Thread 9/32 of process 1/1 did 600 iterations in 195.285228 s
+Thread 12/32 of process 1/1 did 900 iterations in 195.653035 s
+Thread 7/32 of process 1/1 did 400 iterations in 197.887338 s
+Thread 29/32 of process 1/1 did 200 iterations in 198.461713 s
+Thread 18/32 of process 1/1 did 450 iterations in 199.209394 s
+Thread 27/32 of process 1/1 did 1150 iterations in 205.557620 s
+Thread 13/32 of process 1/1 did 300 iterations in 211.369752 s
+Thread 21/32 of process 1/1 did 400 iterations in 213.523852 s
+Thread 14/32 of process 1/1 did 350 iterations in 219.802590 s
+Thread 4/32 of process 1/1 did 500 iterations in 220.078950 s
+Thread 2/32 of process 1/1 did 650 iterations in 220.651561 s
+Thread 30/32 of process 1/1 did 550 iterations in 221.054424 s
+Thread 26/32 of process 1/1 did 600 iterations in 221.867476 s
+Thread 20/32 of process 1/1 did 450 iterations in 238.000809 s
+Thread 6/32 of process 1/1 did 450 iterations in 270.931060 s
+FVA done in 272.42605 seconds.

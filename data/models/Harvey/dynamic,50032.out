@@ -1,0 +1,43 @@
+
+The model supplied is ../data/models/Harvey/Harvey.mps
+SCAIND parameter is -1
+Solution value  = 1.891835
+Solution status = 1
+Rounded solution at 90%  is 1.702651
+Solving 80160 reations !
+Objective index is 80159
+Number of threads = 32, Number of CPUs = 1
+
+Thread 3/32 of process 1/1 did 3160 iterations in 35422.187670 s
+Thread 8/32 of process 1/1 did 5660 iterations in 35450.443628 s
+Thread 19/32 of process 1/1 did 5000 iterations in 35491.239565 s
+Thread 0/32 of process 1/1 did 3500 iterations in 35491.441352 s
+Thread 20/32 of process 1/1 did 6500 iterations in 35515.323754 s
+Thread 25/32 of process 1/1 did 3500 iterations in 35523.511386 s
+Thread 2/32 of process 1/1 did 6000 iterations in 35552.953404 s
+Thread 12/32 of process 1/1 did 4500 iterations in 35585.981753 s
+Thread 11/32 of process 1/1 did 3000 iterations in 35591.679462 s
+Thread 24/32 of process 1/1 did 5000 iterations in 35603.574930 s
+Thread 16/32 of process 1/1 did 6000 iterations in 35614.716004 s
+Thread 28/32 of process 1/1 did 6000 iterations in 35655.611916 s
+Thread 23/32 of process 1/1 did 6500 iterations in 35680.014879 s
+Thread 15/32 of process 1/1 did 5000 iterations in 35695.053834 s
+Thread 30/32 of process 1/1 did 3000 iterations in 35761.474114 s
+Thread 22/32 of process 1/1 did 7000 iterations in 35785.243352 s
+Thread 29/32 of process 1/1 did 7000 iterations in 35792.957306 s
+Thread 5/32 of process 1/1 did 3000 iterations in 35834.570733 s
+Thread 14/32 of process 1/1 did 4000 iterations in 35957.318542 s
+Thread 26/32 of process 1/1 did 5500 iterations in 36085.131269 s
+Thread 17/32 of process 1/1 did 4500 iterations in 36130.701738 s
+Thread 1/32 of process 1/1 did 5000 iterations in 36277.978287 s
+Thread 7/32 of process 1/1 did 7500 iterations in 36320.614022 s
+Thread 9/32 of process 1/1 did 8000 iterations in 36494.963764 s
+Thread 10/32 of process 1/1 did 2000 iterations in 36567.236753 s
+Thread 4/32 of process 1/1 did 4000 iterations in 36642.230948 s
+Thread 21/32 of process 1/1 did 7000 iterations in 36644.591297 s
+Thread 31/32 of process 1/1 did 6000 iterations in 37162.771674 s
+Thread 13/32 of process 1/1 did 2500 iterations in 37203.884484 s
+Thread 6/32 of process 1/1 did 4500 iterations in 37298.064985 s
+Thread 27/32 of process 1/1 did 3000 iterations in 37679.992736 s
+Thread 18/32 of process 1/1 did 7500 iterations in 37809.411870 s
+FVA done in 38446.42763 seconds.

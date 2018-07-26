@@ -1,0 +1,117 @@
+User manual of veryfastFVA.
+
+#### Licence
+CC BY 4.0
+
+Author: Marouen BEN GUEBILA, 
+Contact: marouen.benguebila [AT] uni.lu
+
+#### Description
+veryfastFVA performs flux variability analysis (FVA) on genome-scale metabolic models.
+
+#### Files and folders
+Makefile
+
+lib/veryfastFVA.c
+
+lib/convertProblem.m
+
+data/models
+
+#### Input
+It uses a model format in `.mps`.
+
+You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP problems to `.mps` files
+
+#### Installation:
+1. Install a free academic version of IBM ILOG CPLEX.
+
+	http://www-03.ibm.com/software/products/fr/ibmilogcpleoptistud
+
+2. Check if you have openMP and MPI installed on your system. Usually, openMP comes by default with latest gcc distributions.
+
+	For MPI, Install the distribution openMPI 1.10.3 
+
+3. In the `Makefile`, change the CPLEXDIR variable to point to the installation directory of IBM ILOG CPLEX
+
+4. make
+
+5. Bind OpenMP threads to physical cores by setting the environment variable
+`export OMP_BIND_PROC = TRUE`
+
+6. Set the load balancing schedule with export `OMP_SCHEDULE=schedule,chunk`
+
+	schedule can be either static, dynamic or guided
+
+	chunk is an integer representing the minimal number of iterations processed per worker
+
+	e.g., `export OMP_SCHEDULE=dynamic,50`
+
+7. Run veryfastFVA like the following:
+
+	`mpirun -np a --bind-to none -x OMP_NUM_THREADS=b ./veryfastFVA ./models/c.mps d`
+
+	a: Number of non-memory sharing cores
+
+	b: Number of memory-sharing threads
+
+	c: model name, a selection of models is provided in model folder
+
+	d: optional if not specified scaling (SCAIND) parameter is set to default
+
+	if set to -1, scaling is deactivated
+
+	with openMPI 1.10.2 you might get error messages, launch the application as following:
+
+	`mpirun -np  -mca btl openib --bind-to none -x OMP_NUM_THREADS= ./veryfastFVA ./models/.mps `
+
+#### Output
+Results are written to `modeloutput.csv` file with min and max flux for every reaction.
+
+#### Benchmarking with MATLAB fastFVA
+0. MATLAB scripts of fastFVA are provided in model directory, please change the parpool argument to the number of workers N that you would like to perform your test on. 
+
+1. Run fastFVA script like the following, in the model directory:
+
+	`time matlab -nodesktop -nosplash -r  -logfile .out`
+
+2. Run veryfastFVA script:
+
+	`time mpirun -np  --bind-to none -x OMP_NUM_THREADS= ./veryfastFVA ./models/.mps `
+
+3. Be aware that N has to be equal a*b to be able to compare in similar resource setting.
+
+#### Advanced use
+
+##### Changing load balancing schedules
+1. You can choose the load balancing strategy through export `OMP_SCHEDULE=schedule, chunk`
+
+    Static : predefined number of iterations per worker, each worker gets the same number of iterations
+
+    Guided : each worker gets total_iterations/nworkers initially, then remaining_iterations/nworkers are distributed dynamically
+
+    Dynamic: (default) each worker is updated by iterations of size chunk 
+
+2. make
+
+##### Asymmetrical resource assignment
+0. In the call of verfastFVA, `OMP_NUM_THREADS` parameter is a global variable that sets an equal number of threads in every core
+
+1. If the case of asymmetrical resource assignment e.g. where in 2 nodes you have respectively 4 and 6 cores
+
+	you can take out the `-x` option in the call of veryfastFVA and set the variable OMP_NUM_THREADS locally in every machine
+
+	`export OMP_NUM_THREADS=4`
+
+	`export OMP_NUM_THREADS=6`
+
+2. Alternatively you can set the parameter programmatically in the main body of `veryfastFVA.c`, after the call of MPI through
+
+	```c
+    	if(id==0){
+	        set_num_threads(6)
+	    }elseif (id==1){
+        	set_num_threads(4)
+	    }
+	```
+3. make

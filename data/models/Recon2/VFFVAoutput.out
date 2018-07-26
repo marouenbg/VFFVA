@@ -1,0 +1,26 @@
+
+The model supplied is ../data/models/Recon2/Recon2.mps
+Solution value  = 340.308216
+Solution status = 1
+Rounded solution at 90%  is 306.277394
+Solving 7324 reations !
+Objective index is 4828
+Number of threads = 16, Number of CPUs = 1
+
+Thread 8/16 of process 1/1 did 967 iterations in 10.899388 s
+Thread 12/16 of process 1/1 did 1269 iterations in 10.901539 s
+Thread 14/16 of process 1/1 did 1148 iterations in 10.902991 s
+Thread 5/16 of process 1/1 did 433 iterations in 10.918461 s
+Thread 1/16 of process 1/1 did 439 iterations in 10.949268 s
+Thread 0/16 of process 1/1 did 1174 iterations in 10.962784 s
+Thread 2/16 of process 1/1 did 1122 iterations in 10.984972 s
+Thread 11/16 of process 1/1 did 1524 iterations in 11.009945 s
+Thread 6/16 of process 1/1 did 1165 iterations in 11.054158 s
+Thread 10/16 of process 1/1 did 1198 iterations in 11.070365 s
+Thread 4/16 of process 1/1 did 864 iterations in 11.129032 s
+Thread 9/16 of process 1/1 did 422 iterations in 11.249134 s
+Thread 15/16 of process 1/1 did 987 iterations in 12.213928 s
+Thread 7/16 of process 1/1 did 450 iterations in 12.241094 s
+Thread 13/16 of process 1/1 did 648 iterations in 12.809178 s
+Thread 3/16 of process 1/1 did 838 iterations in 14.427619 s
+FVA done in 15.05912 seconds.

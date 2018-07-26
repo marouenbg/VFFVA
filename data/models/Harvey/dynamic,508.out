@@ -1,0 +1,19 @@
+
+The model supplied is ../data/models/Harvey/Harvey.mps
+SCAIND parameter is -1
+Solution value  = 1.891835
+Solution status = 1
+Rounded solution at 90%  is 1.702651
+Solving 80160 reations !
+Objective index is 80159
+Number of threads = 8, Number of CPUs = 1
+
+Thread 5/8 of process 1/1 did 21400 iterations in 81428.119818 s
+Thread 7/8 of process 1/1 did 18950 iterations in 81429.390145 s
+Thread 2/8 of process 1/1 did 19900 iterations in 81430.397457 s
+Thread 0/8 of process 1/1 did 19000 iterations in 81434.235126 s
+Thread 1/8 of process 1/1 did 20810 iterations in 81438.232353 s
+Thread 6/8 of process 1/1 did 23610 iterations in 81460.540907 s
+Thread 4/8 of process 1/1 did 18650 iterations in 81515.593957 s
+Thread 3/8 of process 1/1 did 18000 iterations in 81730.293613 s
+FVA done in 82370.73480 seconds.

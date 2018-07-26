@@ -1,0 +1,60 @@
+
+                                                                               < M A T L A B (R) >
+                                                                     Copyright 1984-2014 The MathWorks, Inc.
+                                                                       R2014a (8.3.0.532) 64-bit (glnxa64)
+                                                                                February 11, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+Starting parallel pool (parpool) using the 'local' profile ... connected to 2 workers.
+
+-- Warning:: You may only ouput 4, 7 or 9 variables.
+
+ >> Solving Model.S. (uncoupled) 
+ >> The number of arguments is: input: 7, output 2.
+ >> Size of stoichiometric matrix: (11991,13694)
+ >> All the 13694 reactions are solved.
+ >> 0 reactions out of 13694 are minimized (0.00%).
+ >> 0 reactions out of 13694 are maximized (0.00%).
+ >> 13694 reactions out of 13694 are minimized and maximized (100.00%).
+
+ -- Starting to loop through the 2 workers. -- 
+
+ -- The splitting strategy is 0. -- 
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 1 / 2 (LoopID = 1) <> [1, 6847] / [11991, 13694].
+ >> Number of reactions given to the worker: 6847 
+ >> The number of reactions retrieved is 6847
+ -- Start time:     Fri Jan 27 11:21:37 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 6847.
+        -- Maximization (iRound = 1). Number of reactions: 6847.
+ -- End time:     Fri Jan 27 11:22:33 2017
+ >> Time spent in FVAc: 56.1 seconds.
+----------------------------------------------------------------------------------
+ ==> 50.0% done. Please wait ...
+
+----------------------------------------------------------------------------------
+--  Task Launched // TaskID: 2 / 2 (LoopID = 2) <> [6848, 13694] / [11991, 13694].
+ >> Number of reactions given to the worker: 6847 
+ >> The number of reactions retrieved is 6847
+ -- Start time:     Fri Jan 27 11:21:37 2017
+    -- Setting 3 CPLEX parameters ... 
+        ++ (int)[0|0]: CPX_PARAM_PARALLELMODE (1109) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_THREADS (1067) = [set> 1] & [1 <get] 
+        ++ (int)[0|0]: CPX_PARAM_AUXROOTTHREADS (2139) = [set> 2] & [2 <get] 
+    -- All 3 CPLEX parameters set --
+        -- Minimization (iRound = 0). Number of reactions: 6847.
+        -- Maximization (iRound = 1). Number of reactions: 6847.
+ -- End time:     Fri Jan 27 11:22:42 2017
+ >> Time spent in FVAc: 64.7 seconds.
+----------------------------------------------------------------------------------
+ ==> 100% done. Analysis completed.
+Elapsed time is 70.068966 seconds.

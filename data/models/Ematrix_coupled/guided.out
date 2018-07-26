@@ -1,0 +1,26 @@
+
+The model supplied is ../data/models/Ematrix_coupled/Ematrix_coupled.mps
+Solution value  = 39.281721
+Solution status = 1
+Rounded solution at 90%  is 35.353550
+Solving 13726 reations !
+Objective index is 13185
+Number of threads = 16, Number of CPUs = 1
+
+Thread 4/16 of process 1/1 did 2581 iterations in 150.932647 s
+Thread 8/16 of process 1/1 did 2430 iterations in 150.934836 s
+Thread 7/16 of process 1/1 did 1889 iterations in 150.940455 s
+Thread 3/16 of process 1/1 did 1839 iterations in 150.946772 s
+Thread 14/16 of process 1/1 did 2517 iterations in 150.960639 s
+Thread 2/16 of process 1/1 did 1348 iterations in 150.966910 s
+Thread 5/16 of process 1/1 did 1813 iterations in 150.980945 s
+Thread 15/16 of process 1/1 did 1723 iterations in 150.991186 s
+Thread 6/16 of process 1/1 did 1587 iterations in 150.991735 s
+Thread 10/16 of process 1/1 did 1365 iterations in 150.996221 s
+Thread 11/16 of process 1/1 did 2014 iterations in 151.081602 s
+Thread 1/16 of process 1/1 did 1900 iterations in 152.107923 s
+Thread 13/16 of process 1/1 did 719 iterations in 155.622541 s
+Thread 12/16 of process 1/1 did 1395 iterations in 192.843848 s
+Thread 9/16 of process 1/1 did 1474 iterations in 230.387338 s
+Thread 0/16 of process 1/1 did 858 iterations in 280.749185 s
+FVA done in 281.39645 seconds.
