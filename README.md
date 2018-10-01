@@ -4,18 +4,17 @@ veryfastFVA: A hybrid MPI/OpenMP implementation of flux variability analysis.
 
 Authors: Marouen Ben Guebila and Ines Thiele
 
-Contact: marouen.benguebila@uni.lu
+Contact: marouen.b.guebila@gmail.com
 
 ### Usage
-Please refer to the UserGuide.md for veryfastFVA usage.
+Please refer to the `UserGuide.md` for veryfastFVA usage.
 
 Add the project folder to your MATLAB path and save it.
 
-For the comparison with fastFVA, you can install fastFVA following this link:
-http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva
+For the comparison with fastFVA, you can install fastFVA [here](http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva).
 
 ### Paper figures and tables
-Regarding veryfastFV, please set `OMP_PROC_BIND=FALSE` and export `OMP_SCHEDULE=dynamic,50` for the following section:
+Regarding veryfastFVA, please set `OMP_PROC_BIND=FALSE` and export `OMP_SCHEDULE=dynamic,50` for the following section:
 
 1. Table2: (Running times of small models: Ecoli_core, EcoliK12 and P_Putida).
 
