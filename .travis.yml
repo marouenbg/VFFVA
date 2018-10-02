@@ -1,4 +1,12 @@
 language: c
+
 before_script: cd lib
+
 script: make
+
+os:
+    - linux
+
+env:
+    - MPI=openmpi
 
