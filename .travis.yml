@@ -1,3 +1,5 @@
 language: c
-script: ./lib/make
 ls
+cd ./lib
+script: make
+
