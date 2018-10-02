@@ -1,3 +1,5 @@
+https://zenodo.org/badge/142482470.svg
+
 This repository provides the code and result figures with the paper:
 
 Dynamic load balancing enables flux variability analysis for large-scale metabolic models.
