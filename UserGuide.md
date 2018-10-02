@@ -3,7 +3,7 @@ User manual of veryfastFVA (VFFVA).
 #### Licence
 CC BY 4.0
 
-Author: Marouen BEN GUEBILA, 
+Author: Marouen BEN GUEBILA 
 Contact: marouen.b.guebila [AT] gmail.com
 
 #### Description
@@ -41,9 +41,9 @@ You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP p
 
 6. Set the load balancing schedule with export `OMP_SCHEDULE=schedule,chunk`
 
-	schedule can be either static, dynamic or guided
+	`schedule` can be either static, dynamic or guided
 
-	chunk is an integer representing the minimal number of iterations processed per worker
+	`chunk` is an integer representing the minimal number of iterations processed per worker
 
 	e.g., `export OMP_SCHEDULE=dynamic,50`
 
