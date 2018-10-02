@@ -1,9 +1,10 @@
 User manual of veryfastFVA (VFFVA).
 
 #### Licence
-CC BY 4.0
+CC-BY 4.0
 
 Author: Marouen BEN GUEBILA 
+
 Contact: marouen.b.guebila [AT] gmail.com
 
 #### Description
@@ -19,7 +20,7 @@ lib/convertProblem.m
 data/models
 
 #### Input
-It uses a model format in `.mps`.
+VFFVA uses the `.mps` linear programming format.
 
 You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP problems to `.mps` files
 
