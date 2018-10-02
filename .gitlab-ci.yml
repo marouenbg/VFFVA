@@ -1,4 +1,0 @@
-test1:
-  script:
-  - chmod +x ./runtests.sh
-  - "./runtests.sh"

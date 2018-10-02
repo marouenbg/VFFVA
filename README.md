@@ -43,3 +43,6 @@ Regarding VFFVA, please set environment variables `OMP_PROC_BIND=FALSE` and expo
 	To recompute the benchmarking results, please run:
 	- `EmatrixCoupledAnalysisFFVA_LA.sh`: runs FFVA on E_Matrix_coupled model and saves loading and analysis time.
 	- `EmatrixCoupledAnalysisVFFVA_LA.sh`: runs VFFVA on E_Matrix_coupled model and saves loading and analysis time.
+
+### Presentations
+VFFVA has been presented in the poster session of the [International Conference on Systems Biology of Human Disease in Heidelberg, Germany.](https://www.sbhd-conference.org/2017/images/Alphabetical_list_poster_presenters-SBHD_2017.pdf).
