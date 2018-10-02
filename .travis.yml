@@ -1,12 +1,18 @@
 language: c
 
-before_script: cd lib
+before_script: 
+  - cd lib
+
+before_install:
+  - export TRAVIS_ROOT=$HOME/travis
 
 script: make
 
 os:
     - linux
 
-env:
-    - MPI=openmpi
+install:
+  - sh ./travis/install-mpi.sh $TRAVIS_ROOT $MPI_IMPL
 
+env:
+  - MPI_IMPL=openmpi
