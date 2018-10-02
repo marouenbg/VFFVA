@@ -1,13 +1,13 @@
-User manual of veryfastFVA.
+User manual of veryfastFVA (VFFVA).
 
 #### Licence
 CC BY 4.0
 
 Author: Marouen BEN GUEBILA, 
-Contact: marouen.benguebila [AT] uni.lu
+Contact: marouen.b.guebila [AT] gmail.com
 
 #### Description
-veryfastFVA performs flux variability analysis (FVA) on genome-scale metabolic models.
+VFFVA performs flux variability analysis (FVA) on genome-scale metabolic models.
 
 #### Files and folders
 Makefile
@@ -47,7 +47,7 @@ You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP p
 
 	e.g., `export OMP_SCHEDULE=dynamic,50`
 
-7. Run veryfastFVA like the following:
+7. Run VFFVA like the following:
 
 	`mpirun -np a --bind-to none -x OMP_NUM_THREADS=b ./veryfastFVA ./models/c.mps d`
 
@@ -68,14 +68,14 @@ You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP p
 #### Output
 Results are written to `modeloutput.csv` file with min and max flux for every reaction.
 
-#### Benchmarking with MATLAB fastFVA
-0. MATLAB scripts of fastFVA are provided in model directory, please change the parpool argument to the number of workers N that you would like to perform your test on. 
+#### Benchmarking with MATLAB FFVA
+0. MATLAB scripts of FFVA are provided in model directory, please change the parpool argument to the number of workers N that you would like to perform your test on. 
 
-1. Run fastFVA script like the following, in the model directory:
+1. Run FFVA script like the following, in the model directory:
 
 	`time matlab -nodesktop -nosplash -r  -logfile .out`
 
-2. Run veryfastFVA script:
+2. Run VFFVA script:
 
 	`time mpirun -np  --bind-to none -x OMP_NUM_THREADS= ./veryfastFVA ./models/.mps `
 
@@ -95,11 +95,11 @@ Results are written to `modeloutput.csv` file with min and max flux for every re
 2. make
 
 ##### Asymmetrical resource assignment
-0. In the call of verfastFVA, `OMP_NUM_THREADS` parameter is a global variable that sets an equal number of threads in every core
+0. In the call of VFFVA, `OMP_NUM_THREADS` parameter is a global variable that sets an equal number of threads in every core
 
 1. If the case of asymmetrical resource assignment e.g. where in 2 nodes you have respectively 4 and 6 cores
 
-	you can take out the `-x` option in the call of veryfastFVA and set the variable OMP_NUM_THREADS locally in every machine
+	you can take out the `-x` option in the call of VFFVA and set the variable OMP_NUM_THREADS locally in every machine
 
 	`export OMP_NUM_THREADS=4`
 

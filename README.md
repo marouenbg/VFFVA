@@ -6,7 +6,7 @@ Dynamic load balancing enables flux variability analysis for large-scale metabol
 
 Authors: Marouen Ben Guebila and Ines Thiele
 
-Contact: marouen.b.guebila@gmail.com
+Contact: marouen.b.guebila [AT] gmail.com
 
 ### Usage
 Please refer to the [UserGuide](UserGuide.md) for veryfastFVA (VFFVA) usage.
@@ -23,22 +23,23 @@ Regarding VFFVA, please set environment variables `OMP_PROC_BIND=FALSE` and expo
 	You can use run `outputSmallModelTable.m` in `lib` directory with the pre-computed result files.
 
 	You can obtain your own benchmarking results through calling:
-	- `smallModelsAnalysisFFVA_A.sh`: runs fastFVA on small models and saves analysis time only.
-	- `smallModelsAnalysisFFVA_LA.sh`: runs fastFVA on small models and saves loading and analysis time.
-	- `smallModelsAnalysisVFFVA_LA.sh`: runs veryfastFVA on small models and saves loading and analysis time.
+	- `smallModelsAnalysisFFVA_A.sh`: runs FFVA on small models and saves analysis time only.
+	- `smallModelsAnalysisFFVA_LA.sh`: runs FFVA on small models and saves loading and analysis time.
+	- `smallModelsAnalysisVFFVA_LA.sh`: runs VFFVA on small models and saves loading and analysis time.
 
 2. Figure2: (Running times of large models: Recon2 and E_Matrix).
 
 	You can run the first section of `statTest.m` in `lib` directory to plot the figure with pre-computed results.
 
 	To recompute the benchamarking results, please run:
-	- `largeModelsAnalysisFFVA_LA.sh`: runs fastFVA on large models and saves loading and analysis time.
-	- `largeModelsAnalysisVFFVA_LA.sh`: runs veryfastFVA on large models and saves loading and analysis time.
+	- `largeModelsAnalysisFFVA_LA.sh`: runs FFVA on large models and saves loading and analysis time.
+	- `largeModelsAnalysisVFFVA_LA.sh`: runs VFFVA on large models and saves loading and analysis time.
 
 3. Figure3: (Running times of E_Matrix_coupled).
 
 	In the following section, please set `OMP_PROC_BIND=TRUE`.
 	You can run the second section of `statTest.m` in `lib` directory to plot the figure with pre-computed results.
+
 	To recompute the benchmarking results, please run:
-	- `EmatrixCoupledAnalysisFFVA_LA.sh`: runs fastFVA on E_Matrix_coupled model and saves loading and analysis time.
-	- `EmatrixCoupledAnalysisVFFVA_LA.sh`: runs veryfastFVA on E_Matrix_coupled model and saves loading and analysis time.
+	- `EmatrixCoupledAnalysisFFVA_LA.sh`: runs FFVA on E_Matrix_coupled model and saves loading and analysis time.
+	- `EmatrixCoupledAnalysisVFFVA_LA.sh`: runs VFFVA on E_Matrix_coupled model and saves loading and analysis time.
