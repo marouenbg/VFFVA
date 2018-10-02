@@ -50,9 +50,3 @@ case "$os" in
         esac
         ;;
 esac
-
-case "$os" in
-    Linux)
-       export PATH=$TRAVIS_ROOT/open-mpi/bin:$PATH
-       ;;
-esac
