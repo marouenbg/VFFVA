@@ -1,5 +1,4 @@
 language: c
-ls
-cd ./lib
+before_script: cd lib
 script: make
 
