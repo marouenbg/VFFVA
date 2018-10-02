@@ -3,8 +3,11 @@ language: c
 os:
     - linux
 
-before_script: 
-  - cd lib
+compiler:
+    - gcc
+
+env:
+  - MPI_IMPL=openmpi
 
 before_install:
   - export TRAVIS_ROOT=$HOME/travis
@@ -13,8 +16,5 @@ before_install:
 install:
   - sh ./travis/install-mpi.sh $TRAVIS_ROOT $MPI_IMPL
 
-script: 
-  - make
-
-env:
-  - MPI_IMPL=openmpi
+script:
+  - sh ./travis/build-run.sh $TRAVIS_ROOT $MPI_IMPL
