@@ -62,4 +62,8 @@ INSTALLER_LOCALE=en\n
 LICENSE_ACCEPTED=true\n
 USER_INSTALL_DIR=$TRAVIS_ROOT"> myresponse.properties
 
+#work arounf installation bug
+export PS1=">"
+
+#install
 ./cplex_studio$VERSION_CPLEX.linux-x86-64.bin -f "./myresponse.properties"
