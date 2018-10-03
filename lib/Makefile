@@ -9,7 +9,8 @@ LIBFORMAT  = static_pic
 #
 #------------------------------------------------------------
 
-CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio1271/cplex
+CPLEXDIR       = /home/travis/travis/ibm/ILOG/CPLEX_Studio1271/cplex
+#CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio1271/cplex
 #CPLEXDIR      = /work/projects/cplex/soft/cplex/12.6.3/cplex/
 
 # ---------------------------------------------------------------------
