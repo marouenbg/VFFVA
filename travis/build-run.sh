@@ -26,7 +26,7 @@ case "$MPI_IMPL" in
         mpicc --showme:command
 	cd $TRAVIS_ROOT
 	ls
-	cd ibm
+	cd cplex
 	ls
 	cd ILOG
         # see https://github.com/open-mpi/ompi/issues/2956
