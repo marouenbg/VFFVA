@@ -38,6 +38,7 @@ get chunk of reactions assigned from the queue.
 ### Presentations
 VFFVA has been presented in the poster session of the [2017 International Conference on Systems Biology of Human Disease in Heidelberg, Germany.](https://www.sbhd-conference.org/).
 
+### References
 ¹[Gudmundsson and Thiele. Computationally efficient flux variability analysis.](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-11-489)
 
 ²[Heirendt et al. DistributedFBA.jl: high-level, high-performance flux balance analysis in Julia](https://academic.oup.com/bioinformatics/article/33/9/1421/2908434)
