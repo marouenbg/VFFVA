@@ -21,7 +21,7 @@ for reaction rates.
 FFVA² brought considerable speed up over FVA through the use C over MATLAB, and the reuse of the same LP object which allows to avoid solving the problem from
 scratch for every reaction. Although, with the increase of the size of metabolic models, FFVA is run usually in parallel. 
 
-![Dynamic load balancing](dynamicBalancing-01.png)
+![Dynamic load balancing](./dynamicBalancing-01.png)
 ### Presentations
 VFFVA has been presented in the poster session of the [2017 International Conference on Systems Biology of Human Disease in Heidelberg, Germany.](https://www.sbhd-conference.org/).
 
