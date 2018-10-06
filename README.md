@@ -22,15 +22,15 @@ FFVA¹ brought considerable speed up over FVA through the use C over MATLAB, and
 scratch for every reaction. Although, with the increase of the size of metabolic models, FFVA is run usually in parallel. 
 
 The parallel setting for the common FVA implementations<sup>1,2</sup> relies on dividing the 2n tasks (one maximization and one minimization for the n reactions) among the p workers equally.
-Such as each worker gets 2n/p reactions to process. This is called **static load balancing** and would be the optimal startegy if each of the n reactions is solved in equal times.
+Such as each worker gets 2n/p reactions to process. This is called **static load balancing** and would be the optimal startegy if each of the n reactions is solved in equal times (left figure).
 
 Nevertheless, in most metabolic models there are several ill-conditioned reactions that require longer solution time thereby slowing the worker processing them which
-impacts the overall process, as the workers have to synchronize at the end to reduce the results.
+impacts the overall process, as the workers have to synchronize at the end to reduce the results (middle figure).
 
 One approach would be to estimate *a priori* the solution time of each reaction and distribute to each worker 2p/n reactions of equal solution time. But, estimating the solution
 time of a reaction *a priori* could be a challenging task.
 
-VFFVA performs **dynamic load blancing**. In runtime, each worker gets a small chunk of reactions to process and once finsihed, gets another one and so on. This setting allows i)
+VFFVA performs **dynamic load blancing**. In runtime, each worker gets a small chunk of reactions to process and once finsihed, gets another one and so on (right figure). This setting allows i)
 fast workers to process more reactions which allows all the workers to finish at the same time, and ii) does not require *a priori* balancing as the workers will automatically
 get chunk of reactions assigned from the queue. 
 
