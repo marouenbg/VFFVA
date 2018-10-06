@@ -15,9 +15,9 @@ Add the project folder to your MATLAB path and save it.
 For the comparison with fastFVA (FFVA), you can install FFVA [here](http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva).
 
 ### Motivation
-FVA[^1] is the workhorse of metabolic modeling. It allows to characterize the boundaries of the solution space of a metabolic model and delineates the bounds
+FVA [^1] is the workhorse of metabolic modeling. It allows to characterize the boundaries of the solution space of a metabolic model and delineates the bounds
 for reaction rates.
-FFVA[^2] brought considerable speed up over FVA through the use C over MATLAB, and the reuse of the same LP object which allows to avoid solving the problem from
+FFVA [^2] brought considerable speed up over FVA through the use C over MATLAB, and the reuse of the same LP object which allows to avoid solving the problem from
 scratch for every reaction. Although, with the increase of the size of metabolic models, FFVA is run usually in parallel. 
 
 ### Presentations
