@@ -15,18 +15,17 @@ Add the project folder to your MATLAB path and save it.
 For the comparison with fastFVA (FFVA), you can install FFVA [here](http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva).
 
 ### Motivation
-FVA¹ is the workhorse of metabolic modeling. It allows to characterize the boundaries of the solution space of a metabolic model and delineates the bounds
+FVA³ is the workhorse of metabolic modeling. It allows to characterize the boundaries of the solution space of a metabolic model and delineates the bounds
 for reaction rates.
 
-FFVA² brought considerable speed up over FVA through the use C over MATLAB, and the reuse of the same LP object which allows to avoid solving the problem from
+FFVA¹ brought considerable speed up over FVA through the use C over MATLAB, and the reuse of the same LP object which allows to avoid solving the problem from
 scratch for every reaction. Although, with the increase of the size of metabolic models, FFVA is run usually in parallel. 
 
 ![Dynamic load balancing](./dynamicBalancing-01.png)
 ### Presentations
 VFFVA has been presented in the poster session of the [2017 International Conference on Systems Biology of Human Disease in Heidelberg, Germany.](https://www.sbhd-conference.org/).
 
-¹[Mahadevan and Schilling, The effects of alternate optimal solutions in constraint-based genome-scale metabolic models.](https://www.ncbi.nlm.nih.gov/pubmed/14642354)
-²[Gudmundsson and Thiele, Computationally efficient flux variability analysis.](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-11-489)
-
-
+¹[Gudmundsson and Thiele. Computationally efficient flux variability analysis.](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-11-489)
+²[Heirendt et al. DistributedFBA.jl: high-level, high-performance flux balance analysis in Julia](https://academic.oup.com/bioinformatics/article/33/9/1421/2908434)
+³[Mahadevan and Schilling. The effects of alternate optimal solutions in constraint-based genome-scale metabolic models.](https://www.ncbi.nlm.nih.gov/pubmed/14642354)
 
