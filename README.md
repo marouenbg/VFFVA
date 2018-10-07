@@ -30,7 +30,7 @@ impacts the overall process, as the workers have to synchronize at the end to re
 One approach would be to estimate *a priori* the solution time of each reaction and distribute to each worker 2p/n reactions of equal solution time. But, estimating the solution
 time of a reaction *a priori* could be a challenging task.
 
-VFFVA performs **dynamic load blancing**. In runtime, each worker gets a small chunk of reactions to process and once finsihed, gets another one and so on (right figure). This setting allows i)
+VFFVA performs **dynamic load blancing**. In runtime, each worker gets a small chunk of reactions to process and once finished, gets another one and so on (right figure). This setting allows i)
 fast workers to process more reactions which allows all the workers to finish at the same time, and ii) does not require *a priori* balancing as the workers will automatically
 get chunk of reactions assigned from the queue. 
 
