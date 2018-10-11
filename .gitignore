@@ -24,14 +24,16 @@
 *.csv
 *.mps
 *.o
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.pdf
 code/
 miscFiles/
-<<<<<<< HEAD
 data/models/Harvey
 data/models/Harvey_new
 data/models/Male_11452
 data/models/Male_13951
-
-=======
-paper/
->>>>>>> e644dd8b7297c8eef325d8b1d3e58261362d5fe8
