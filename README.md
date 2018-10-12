@@ -27,7 +27,7 @@ Such as each worker gets 2n/p reactions to process. This is called **static load
 Nevertheless, in most metabolic models there are several ill-conditioned reactions that require longer solution time thereby slowing the worker processing them which
 impacts the overall process, as the workers have to synchronize at the end to reduce the results (middle figure).
 
-One approach would be to estimate *a priori* the solution time of each reaction and distribute to each worker 2p/n reactions of equal solution time. But, estimating the solution
+One approach would be to estimate *a priori* the solution time of each reaction and distribute to each worker 2n/p reactions of equal solution time. But, estimating the solution
 time of a reaction *a priori* could be a challenging task.
 
 VFFVA performs **dynamic load blancing**. In runtime, each worker gets a small chunk of reactions to process and once finished, gets another one and so on (right figure). This setting allows i)
@@ -36,7 +36,7 @@ get chunk of reactions assigned from the queue.
 
 ![Dynamic load balancing](./dynamicBalancing-01.png)
 ### Presentations
-VFFVA has been presented in the poster session of the [2017 International Conference on Systems Biology of Human Disease in Heidelberg, Germany.](https://www.sbhd-conference.org/).
+VFFVA has been presented in the poster session of the [2017 International Conference on Systems Biology of Human Disease in Heidelberg, Germany.](https://www.sbhd-conference.org/)
 
 ### References
 ¹[Gudmundsson and Thiele. Computationally efficient flux variability analysis.](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-11-489)
