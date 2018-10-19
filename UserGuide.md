@@ -145,3 +145,8 @@ Regarding VFFVA, please set environment variables `OMP_PROC_BIND=FALSE` and expo
 	To recompute the benchmarking results, please run:
 	- `EmatrixCoupledAnalysisFFVA_LA.sh`: runs FFVA on E_Matrix_coupled model and saves loading and analysis time.
 	- `EmatrixCoupledAnalysisVFFVA_LA.sh`: runs VFFVA on E_Matrix_coupled model and saves loading and analysis time.
+
+#### Important note
+VFFVA is run on a suboptimal objective equal to 90% the optimal objective of the original problem, because with large models, numerical infeasibilities can occur with optimisation percentage
+equal to 100%. You can change the optPerc varibale to the desired value. In the future, this variable
+will be passed in the VFFVA call.
