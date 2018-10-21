@@ -17,8 +17,7 @@ CPLEXDIR       = /home/travis/travis/cplex
 # Compiler selection 
 # ---------------------------------------------------------------------
 
-ISTRAVIS = ${TRAVIS}  
-ifeq (ISTRAVIS,"TRUE")
+ifndef TRAVIS
 	CC  = mpicc -O3 -fopenmp -coverage
 else
 	CC  = mpicc -O3 -fopenmp 
