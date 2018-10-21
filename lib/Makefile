@@ -17,9 +17,12 @@ CPLEXDIR       = /home/travis/travis/cplex
 # Compiler selection 
 # ---------------------------------------------------------------------
 
-
-CC  = mpicc -O3 -fopenmp -coverage
-
+TRAVIS = ${TRAVIS}  
+ifeq (TRAVIS,true)
+	CC  = mpicc -O3 -fopenmp -coverage
+else
+	cc  = mpicc -O3 -fopenmp 
+endif
 
 # ---------------------------------------------------------------------
 # Compiler options 
@@ -43,7 +46,7 @@ CLNFLAGS  = -lcplex -lm -lpthread -lrt
 
 
 
-all:
+ll:
 	make all_c
 
 #execute: all
