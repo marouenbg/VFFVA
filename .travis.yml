@@ -12,9 +12,13 @@ env:
 before_install:
   - export TRAVIS_ROOT=$HOME/travis
   - mkdir $TRAVIS_ROOT
+  - pip install --user codecov
 
 install:
   - sh ./travis/install-mpi.sh $TRAVIS_ROOT $MPI_IMPL
 
 script:
   - sh ./travis/build-run.sh $TRAVIS_ROOT $MPI_IMPL
+
+after_success:
+  - codecov --file coverage/lcov.info --disable search
