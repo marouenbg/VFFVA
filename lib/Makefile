@@ -18,9 +18,9 @@ CPLEXDIR       = /home/travis/travis/cplex
 # ---------------------------------------------------------------------
 
 ifndef TRAVIS
-	CC  = mpicc -O3 -fopenmp -coverage
+	CC  = mpicc -O3 -fopenmp
 else
-	CC  = mpicc -O3 -fopenmp 
+	CC  = mpicc -O3 -fopenmp -coverage
 endif
 
 # ---------------------------------------------------------------------
