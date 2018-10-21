@@ -18,10 +18,10 @@ CPLEXDIR       = /home/travis/travis/cplex
 # ---------------------------------------------------------------------
 
 ISTRAVIS = ${TRAVIS}  
-ifeq (ISTRAVIS,true)
+ifeq (ISTRAVIS,"TRUE")
 	CC  = mpicc -O3 -fopenmp -coverage
 else
-	cc  = mpicc -O3 -fopenmp 
+	CC  = mpicc -O3 -fopenmp 
 endif
 
 # ---------------------------------------------------------------------
