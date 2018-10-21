@@ -1,4 +1,4 @@
-language: c
+language: generic
 
 os:
     - linux
@@ -7,12 +7,11 @@ compiler:
     - gcc
 
 env:
-  - MPI_IMPL=openmpi CODECOV_TOKEN="7bf8e3f1-2829-4e36-a1ee-853858179bda"
+  - MPI_IMPL=openmpi
 
 before_install:
   - export TRAVIS_ROOT=$HOME/travis
   - mkdir $TRAVIS_ROOT
-  - pip install --user codecov
 
 install:
   - sh ./travis/install-mpi.sh $TRAVIS_ROOT $MPI_IMPL
@@ -20,5 +19,27 @@ install:
 script:
   - sh ./travis/build-run.sh $TRAVIS_ROOT $MPI_IMPL
 
-after_success:
-  - codecov --file coverage/lcov.info --disable search
+sudo: required
+
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
+
+after_success: |
+  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
+  tar xzf master.tar.gz &&
+  cd kcov-master &&
+  mkdir build &&
+  cd build &&
+  cmake .. &&
+  make &&
+  sudo make install &&
+  cd ../.. &&
+  rm -rf kcov-master &&
+  mkdir -p coverage &&
+  kcov coverage build-run.sh &&
+  bash <(curl -s https://codecov.io/bash)
