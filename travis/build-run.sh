@@ -25,7 +25,7 @@ case "$MPI_IMPL" in
 	make
 	#simple test
 	#1 core 2 threads
-	mpirun -np 1 --bind-to none -x OMP_NUM_THREADS=2 ./veryfastFVA ../data/models/Ecoli_core/Ecoli_core.mps
+	mpirun -np 1 --bind-to none -x OMP_NUM_THREADS=2 ./veryfastFVA ../data/models/Ecoli_core/Ecoli_core.mps -1
         export TMPDIR=/tmp
         ;;
 esac
