@@ -18,3 +18,6 @@ install:
 
 script:
   - sh ./travis/build-run.sh $TRAVIS_ROOT $MPI_IMPL
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

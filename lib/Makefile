@@ -9,16 +9,23 @@ LIBFORMAT  = static_pic
 #
 #------------------------------------------------------------
 
-CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio1271/cplex
-#CPLEXDIR      = /work/projects/cplex/soft/cplex/12.6.3/cplex/
+ifndef TRAVIS
+	#Please define CPLEX path here
+	CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio1271/cplex
+	#CPLEXDIR      = /work/projects/cplex/soft/cplex/12.6.3/cplex/
+else
+	CPLEXDIR       = /home/travis/travis/cplex
+endif
 
 # ---------------------------------------------------------------------
 # Compiler selection 
 # ---------------------------------------------------------------------
 
-
-CC  = mpicc -O3 -fopenmp
-
+ifndef TRAVIS
+	CC  = mpicc -O3 -fopenmp
+else
+	CC  = mpicc -O3 -fopenmp -coverage
+endif
 
 # ---------------------------------------------------------------------
 # Compiler options 
@@ -42,7 +49,7 @@ CLNFLAGS  = -lcplex -lm -lpthread -lrt
 
 
 
-all:
+ll:
 	make all_c
 
 #execute: all

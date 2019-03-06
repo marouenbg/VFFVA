@@ -116,3 +116,37 @@ Results are written to `modeloutput.csv` file with min and max flux for every re
 	    }
 	```
 3. make
+
+#### Paper figures and tables
+Regarding VFFVA, please set environment variables `OMP_PROC_BIND=FALSE` and export `OMP_SCHEDULE=dynamic,50` for the following section:
+
+1. Table2: (Running times of small models: Ecoli_core, EcoliK12 and P_Putida).
+
+	You can use run `outputSmallModelTable.m` in `lib` directory with the pre-computed result files.
+
+	You can obtain your own benchmarking results through calling:
+	- `smallModelsAnalysisFFVA_A.sh`: runs FFVA on small models and saves analysis time only.
+	- `smallModelsAnalysisFFVA_LA.sh`: runs FFVA on small models and saves loading and analysis time.
+	- `smallModelsAnalysisVFFVA_LA.sh`: runs VFFVA on small models and saves loading and analysis time.
+
+2. Figure2: (Running times of large models: Recon2 and E_Matrix).
+
+	You can run the first section of `statTest.m` in `lib` directory to plot the figure with pre-computed results.
+
+	To recompute the benchamarking results, please run:
+	- `largeModelsAnalysisFFVA_LA.sh`: runs FFVA on large models and saves loading and analysis time.
+	- `largeModelsAnalysisVFFVA_LA.sh`: runs VFFVA on large models and saves loading and analysis time.
+
+3. Figure3: (Running times of E_Matrix_coupled).
+
+	In the following section, please set `OMP_PROC_BIND=TRUE`.
+	You can run the second section of `statTest.m` in `lib` directory to plot the figure with pre-computed results.
+
+	To recompute the benchmarking results, please run:
+	- `EmatrixCoupledAnalysisFFVA_LA.sh`: runs FFVA on E_Matrix_coupled model and saves loading and analysis time.
+	- `EmatrixCoupledAnalysisVFFVA_LA.sh`: runs VFFVA on E_Matrix_coupled model and saves loading and analysis time.
+
+#### Important note
+VFFVA is run on a suboptimal objective equal to 90% the optimal objective of the original problem, because with large models, numerical infeasibilities can occur with optimisation percentage
+equal to 100%. You can change the optPerc varibale to the desired value. In the future, this variable
+will be passed in the VFFVA call.

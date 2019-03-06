@@ -21,13 +21,11 @@ esac
 # Capture details of build
 case "$MPI_IMPL" in
     openmpi)
-        # this is missing with Mac build it seems
-        #ompi_info --arch --config
-        mpicc --showme:command
 	cd lib
 	make
-        # see https://github.com/open-mpi/ompi/issues/2956
-        # fixes issues e.g. https://travis-ci.org/jeffhammond/armci-mpi/jobs/211165004
+	#simple test
+	#1 core 2 threads
+	mpirun -np 1 --bind-to none -x OMP_NUM_THREADS=2 ./veryfastFVA ../data/models/Ecoli_core/Ecoli_core.mps -1
         export TMPDIR=/tmp
         ;;
 esac
