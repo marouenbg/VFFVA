@@ -1,0 +1,16 @@
+function [minFlux,maxFlux]=VFFVA(nCores,nThreads,model,scaling,memAff)
+
+%Optional:
+%scaling: 0(default) -1 or 1
+%memAff: none(default) / socket / core
+%model is complete path to model in .mps (offer to convert model from .mat)
+
+if nargin<5
+    memAff = 'none';
+end
+if nargin<5
+
+system(['mpirun -np' num2str(nCores) '--bind-to ' num2str(memAff) '-x OMP_NUM_THREADS=' num2str(nThreads)...
+    './veryfastFVA ' model num2str(scaling)]);
+
+end
