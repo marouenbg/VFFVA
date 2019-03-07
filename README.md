@@ -15,7 +15,7 @@ Add the project folder to your MATLAB path and save it.
 
 For the comparison with fastFVA (FFVA), you can install FFVA [here](http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva).
 
-###Quick installation
+### Quick installation
 ```
 cd lib     
 source ./install.sh
