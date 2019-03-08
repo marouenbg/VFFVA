@@ -62,10 +62,10 @@ if ~ischar(model)
 	%Convert .mat problem to .mps
 	%Determine if model is coupled
 	if isfield(model,'A')
-		coupled=1
+		coupled=1;
 	%If mode is coupled, schedule should be set to -1
 	else
-		coupled=0
+		coupled=0;
     end
     convertProblem(model, coupled, 'myVFFVAmodel');
 	model='myVFFVAmodel.mps';

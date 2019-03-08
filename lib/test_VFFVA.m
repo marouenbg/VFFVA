@@ -16,4 +16,8 @@ model=LPProblemtRNACoupled90;
 [minFlux,maxFlux]=VFFVA(nCores, nThreads, model);
 
 %comapre to FVA from COBRA toolbox
-[minFluxFVA,maxFluxFVA]=fluxVariability(ecoli);
+optPercentage=90;
+[minFluxFVA,maxFluxFVA]=fluxVariability(ecoli, optPercentage);
+plot(minFluxVFFVA,minFluxFVA,'o')
+hold on;
+plot([-40 100],[-40 100])
