@@ -10,6 +10,8 @@ This repository provides the code and result figures with the paper:
 Contact: [Marouen Ben Guebila](mailto:marouen.b.guebila@gmail.com)
 
 ### Usage
+The supported languages are: C (veryfastFVA.c) and MATLAB (VFFVA.m)
+
 Please refer to the [UserGuide](UserGuide.md) for veryfastFVA (VFFVA) usage.
 
 Add the project folder to your MATLAB path and save it.
