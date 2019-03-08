@@ -10,10 +10,13 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 % INPUT:
 %    nCores:           Number of non-shared memory cores/machines.
 %    nThreads:         Number of shared memory threads in each core/machine.
-%    model:            path to metabolic model in .mps format.
+%    model:            .mps format: path to metabolic model in .mps format.
+%                      COBRA format: will be automatically formatted to .mps format.
 %
 % OPTIONAL INPUTS:
-%    scaling:          (Default = -1)
+%    scaling:          CPLEX parameter. It corresponds to SCAIND parameter (Default = 0).
+%                      -1: no scaling; 0: equilibration scaling; 1: more aggressive scaling.
+%                      more information here: https://www.ibm.com/support/knowledgecenter/SSSA5P_12.7.0/ilog.odms.cplex.help/CPLEX/Parameters/topics/ScaInd.html.
 %    memAff:           none, core, or socket. (Default = none). This an OpenMPI parameter, more 
 %                      information here: https://www.open-mpi.org/faq/?category=tuning#using-paffinity-v1.4.
 %    schedule:         Dynamic, static, or guided. (Default = dynamic). This is an OpenMP parameter, more
@@ -27,8 +30,6 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 %
 % .. Author:
 %       - Marouen Ben Guebila
-
-%(offer to convert model from .mat)
 
 %Set optional parameters to defaults
 if nargin<4
@@ -51,11 +52,25 @@ if status==127
     'or use the quick install script']);
 end
 
+%If model in COBRA forat
+if !isstring(model)
+	%Convert .mat problem to .mps
+	%Determine if model is coupled
+	if
+		coupled=1
+	%If mode is coupled, schedule should be set to -1
+	else
+		coupled=0
+	end
+	convertProblem(model, coupled, 'myVFFVAmodel');
+	model=;
+end
+
 %Set schedule and chunk size parameters
 setenv('OMP_SCHEDUELE', [schedule ',' num2str(nChunk)])
 
 %Set install folder of MPI
-setenv('PATH', [getenv('PATH') [':' getenv(HOME) '/open-mpi/bin']])
+setenv('PATH', [getenv('PATH') ':' getenv(HOME) '/open-mpi/bin'])
 
 %Call VFFVA
 [status,cmdout]=system(['mpirun -np ' num2str(nCores) ' --bind-to ' num2str(memAff) ' -x OMP_NUM_THREADS=' num2str(nThreads)...
