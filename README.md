@@ -46,3 +46,15 @@ VFFVA has been presented in the poster session of the [2017 International Confer
 
 ³[Mahadevan and Schilling. The effects of alternate optimal solutions in constraint-based genome-scale metabolic models.](https://www.ncbi.nlm.nih.gov/pubmed/14642354)
 
+# License
+
+The software is free ańd is licensed under the MIT license, see the file [LICENSE](<https://github.com/marouenbg/VFFVA/blob/master/LICENSE.txt>) for details.
+
+# Feedback/Issues
+
+Please report any issues to the [issues page](https://github.com/marouenbg/VFFVA/issues).
+
+# Code of Conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).
+By participating in this project you agree to abide by its terms.
