@@ -46,6 +46,10 @@ if nargin<7
     nChunk=50;
 end
 
+
+%Set install folder of MPI
+setenv('PATH', [getenv('PATH') ':' getenv('HOME') '/open-mpi/bin'])
+
 %Check if MPI is installed
 [status,cmdout]=system('mpirun');
 if status==127
@@ -54,7 +58,7 @@ if status==127
 end
 
 %If model in COBRA forat
-if !isstring(model)
+if ~ischar(model)
 	%Convert .mat problem to .mps
 	%Determine if model is coupled
 	if isfield(model,'A')
@@ -62,16 +66,13 @@ if !isstring(model)
 	%If mode is coupled, schedule should be set to -1
 	else
 		coupled=0
-	end
-	convertProblem(model, coupled, 'myVFFVAmodel');
-	model=;
+    end
+    convertProblem(model, coupled, 'myVFFVAmodel');
+	model='myVFFVAmodel.mps';
 end
 
 %Set schedule and chunk size parameters
 setenv('OMP_SCHEDUELE', [schedule ',' num2str(nChunk)])
-
-%Set install folder of MPI
-setenv('PATH', [getenv('PATH') ':' getenv(HOME) '/open-mpi/bin'])
 
 %Call VFFVA
 [status,cmdout]=system(['mpirun -np ' num2str(nCores) ' --bind-to ' num2str(memAff) ' -x OMP_NUM_THREADS=' num2str(nThreads)...
@@ -79,10 +80,11 @@ setenv('PATH', [getenv('PATH') ':' getenv(HOME) '/open-mpi/bin'])
 
 %Fetch results
 resultFile=[model(1:end-4) 'output.csv'];
-results=readtable(resultFile)
+results=readtable(resultFile);
 minFlux=results.minFlux; maxFlux=results.maxFlux;
 
 %remove result file
 delete(resultFile)
+delete('myVFFVAmodel.mps')
 
 end

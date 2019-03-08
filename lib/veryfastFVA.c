@@ -270,7 +270,7 @@ int main (int argc, char **argv){
 	}
 	strcat(modelName, fileName);
 	fp=fopen(modelName,"w+");
-	fprintf(fp,"Minflux,Maxflux\n");
+	fprintf(fp,"minFlux,maxFlux\n");
 	if(rank==0){
 		for(i=0;i<n;i++){
 			fprintf(fp,"%f,%f\n",globalminFlux[i],globalmaxFlux[i]);

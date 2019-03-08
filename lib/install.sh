@@ -42,6 +42,9 @@ export PS1=">"
 #install
 ./cplex_studio$VERSION_CPLEX.linux-x86-64.bin -f "./myresponse.properties"
 
+#Sometimes path does not get updated
+export PATH=$HOME/open-mpi/bin:$PATH
+
 #Clean files
 rm -rf cplex_studio$VERSION_CPLEX.linux-x86-64.bin
 rm -rf ../../openmpi-$VERSION
