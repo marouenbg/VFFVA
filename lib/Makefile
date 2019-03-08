@@ -11,7 +11,7 @@ LIBFORMAT  = static_pic
 
 ifndef TRAVIS
 	#Please define CPLEX path here
-	CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio1271/cplex
+	CPLEXDIR      = /home/marouen_b_guebila/CPLEX_Studio12.7.1/cplex
 	#CPLEXDIR      = /work/projects/cplex/soft/cplex/12.6.3/cplex/
 else
 	CPLEXDIR       = /home/travis/travis/cplex

@@ -15,6 +15,13 @@ Add the project folder to your MATLAB path and save it.
 
 For the comparison with fastFVA (FFVA), you can install FFVA [here](http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva).
 
+### Quick installation
+```
+cd lib     
+source ./install.sh
+make
+```
+
 ### Motivation
 FVA³ is the workhorse of metabolic modeling. It allows to characterize the boundaries of the solution space of a metabolic model and delineates the bounds
 for reaction rates.
