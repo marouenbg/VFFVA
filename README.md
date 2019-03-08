@@ -1,6 +1,7 @@
 [![DOI](https://zenodo.org/badge/142482470.svg)](https://zenodo.org/badge/latestdoi/142482470)
 [![TRAVIS](https://travis-ci.com/marouenbg/VFFVA.svg?branch=master)](https://travis-ci.com/marouenbg/VFFVA)
 [![codecov](https://codecov.io/gh/marouenbg/VFFVA/branch/master/graph/badge.svg)](https://codecov.io/gh/marouenbg/VFFVA)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/marouenbg/ACHR.cu/blob/master/LICENSE.txt)
 
 This repository provides the code and result figures with the paper:
 
@@ -53,15 +54,15 @@ VFFVA has been presented in the poster session of the [2017 International Confer
 
 ³[Mahadevan and Schilling. The effects of alternate optimal solutions in constraint-based genome-scale metabolic models.](https://www.ncbi.nlm.nih.gov/pubmed/14642354)
 
-# License
+### License
 
 The software is free ańd is licensed under the MIT license, see the file [LICENSE](<https://github.com/marouenbg/VFFVA/blob/master/LICENSE.txt>) for details.
 
-# Feedback/Issues
+### Feedback/Issues
 
 Please report any issues to the [issues page](https://github.com/marouenbg/VFFVA/issues).
 
-# Code of Conduct
+### Code of Conduct
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md).
 By participating in this project you agree to abide by its terms.
