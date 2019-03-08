@@ -11,7 +11,8 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 %    nCores:           Number of non-shared memory cores/machines.
 %    nThreads:         Number of shared memory threads in each core/machine.
 %    model:            .mps format: path to metabolic model in .mps format.
-%                      COBRA format: will be automatically formatted to .mps format.
+%                      COBRA format: will be automatically formatted to .mps format. Make sure to add VFFVA folder to
+%                      your MATLAB path to access the conversion script.
 %
 % OPTIONAL INPUTS:
 %    scaling:          CPLEX parameter. It corresponds to SCAIND parameter (Default = 0).
@@ -56,7 +57,7 @@ end
 if !isstring(model)
 	%Convert .mat problem to .mps
 	%Determine if model is coupled
-	if
+	if isfield(model,'A')
 		coupled=1
 	%If mode is coupled, schedule should be set to -1
 	else
