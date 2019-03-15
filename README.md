@@ -12,7 +12,7 @@ Contact: [Marouen Ben Guebila](mailto:marouen.b.guebila@gmail.com)
 ### Usage
 The supported languages are: C (veryfastFVA.c) and MATLAB (VFFVA.m)
 
-Please refer to the [UserGuide](UserGuide.md) for veryfastFVA (VFFVA) usage.
+Please refer to the [documentation](https://vffva.readthedocs.io/en/latest/) and the [UserGuide](UserGuide.md) for veryfastFVA (VFFVA) usage.
 
 Add the project folder to your MATLAB path and save it.
 
@@ -62,7 +62,7 @@ The software is free ańd is licensed under the MIT license, see the file [LICEN
 
 ### Feedback/Issues
 
-Please report any issues to the [issues page](https://github.com/marouenbg/VFFVA/issues).
+Please check the [documentation](https://vffva.readthedocs.io/en/latest/) first and report any issues to the [issues page](https://github.com/marouenbg/VFFVA/issues).
 
 ### Code of Conduct
 
