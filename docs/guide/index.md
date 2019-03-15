@@ -1,6 +1,6 @@
 The following provides the usage guide for both the C and MATLAB versions of VFFVA.
 
-# C version
+## C version
 
 After installing the dependencies of `VFWarmup`, you can build the binaries at the root of `lib` using `make`.
 
@@ -26,7 +26,7 @@ a minimization and a maximization in each dimension.
 
 The ouput file is saved as `modeloutput.csv`, with model is the name of the metabolic model.
 
-# MATLAB version
+## MATLAB version
 
 The MATLAB version VFFVA.m is a wrapper around the C versiobn, which means that the previous installation steps of the C version have to be performed.
 
