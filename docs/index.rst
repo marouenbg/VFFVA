@@ -47,6 +47,10 @@ Contents
 
 .. toctree::
 
+   tutos/index
+
+.. toctree::
+
    changelog
 
 .. toctree::
