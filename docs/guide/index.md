@@ -4,7 +4,7 @@ The following provides the usage guide for both the C and MATLAB versions of VFF
 
 ## C version
 
-After installing the dependencies of `VFWarmup`, you can build the binaries at the root of `lib` using `make`.
+After installing the dependencies of `VFFVA`, you can build the binaries at the root of `lib` using `make`.
 
 Then call `VFFVA` as follows:
 
