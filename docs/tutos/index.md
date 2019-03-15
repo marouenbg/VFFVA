@@ -2,7 +2,7 @@
 
 First, make sure that VFFVA both in MATLAB is correctly installed.
 
-# Comparison of the results of FVA and VFFVA
+## Comparison of the results of FVA and VFFVA
 
 In this tutorial, we would like to compare the consistency of the results between the COBRA Toolbox FVA function
 and VFFVA.
