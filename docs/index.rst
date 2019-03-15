@@ -43,6 +43,10 @@ Contents
 
 .. toctree::
 
+   guide/index
+
+.. toctree::
+
    changelog
 
 .. toctree::
