@@ -1,6 +1,6 @@
 # Tutorials
 
-First, make sure that VFFVA both in MATLAB is correctly installed.
+First, make sure that VFFVA.m in MATLAB is correctly installed.
 
 ## Comparison of the results of FVA and VFFVA
 
@@ -9,19 +9,27 @@ and VFFVA.
 
 + Install the COBRA Toolbox through entering in your command prompt
 
-`git clone https://github.com/opencobra/cobratoolbox.git`
+```
+git clone https://github.com/opencobra/cobratoolbox.git
+```
 
 + Then launch MATLAB and add COBRA Toolbox to the path
 
-`addpath(genpath(\path\to\cobratoolbox))`
+```
+addpath(genpath(\path\to\cobratoolbox))
+```
 
 + Initiate the COBRA Toolbox
 
-`initCobraToolbox`
+```
+initCobraToolbox
+```
 
 + Change the solver to IBM CPLEX
 
-`changeCobraSolver('ibm_cplex')`
+```
+changeCobraSolver('ibm_cplex')
+```
 
 + Run FVA on Ecoli core model
 
