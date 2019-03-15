@@ -1,3 +1,5 @@
+# Usage guide
+
 The following provides the usage guide for both the C and MATLAB versions of VFFVA.
 
 ## C version
