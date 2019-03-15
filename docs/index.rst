@@ -39,6 +39,10 @@ Contents
 
 .. toctree::
 
+   install/index
+
+.. toctree::
+
    changelog
 
 .. toctree::
