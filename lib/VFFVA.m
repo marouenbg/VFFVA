@@ -57,7 +57,7 @@ if status==127
     'or use the quick install script']);
 end
 
-%If model in COBRA forat
+%If model in COBRA format
 if ~ischar(model)
 	%Convert .mat problem to .mps
 	%Determine if model is coupled
@@ -85,6 +85,8 @@ minFlux=results.minFlux; maxFlux=results.maxFlux;
 
 %remove result file
 delete(resultFile)
-delete('myVFFVAmodel.mps')
+if ~ischar(model)
+    delete('myVFFVAmodel.mps')
+end
 
 end
