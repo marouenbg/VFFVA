@@ -59,4 +59,4 @@ plot([-40 100],[-40 100])
 ```
 
 As we can see the results lie perfectly on the identity line.
-![benchmark](images/VFFVAbenchmark.png)
+![](images/VFFVAbenchmark.png)
