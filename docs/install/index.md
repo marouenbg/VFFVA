@@ -8,11 +8,11 @@ The C implementation is a hybrid MPI/OpenMP code that has two levels of parallel
 and non-shared memory systems.
 
 ### Requirements
-+ Linux-based system.
++ Linux-based system (tested on Ubuntu 16.04 and 18.04).
 
-+ IBM CPLEX 12.6.3. and above [Free academic version.](http://www-03.ibm.com/software/products/fr/ibmilogcpleoptistud)
++ IBM CPLEX 12.6.3. (tested on 12.6.3 and 12.10) and above [Free academic version.](http://www.ibm.com/academic)
 
-+ OpenMP comes be default in the latest gcc version.
++ OpenMP comes be default in the latest gcc version (For macOs, OpenMp has to be installed separately)
 
 + MPI through the OpenMPI 1.10.3 implementation.
 
@@ -55,7 +55,7 @@ You might also need to add MPI path
 ```
 export PATH=$HOME/open-mpi/bin:$PATH
 ```
-+ IBM CPLEX: The recommended approach is to download [IBM CPLEX](http://www-03.ibm.com/software/products/fr/ibmilogcpleoptistud) and register for the free academic version.
++ IBM CPLEX: The recommended approach is to download [IBM CPLEX](http://www.ibm.com/academic) and register for the free academic version.
 
 Make sure that the CPLEXDIR path in `lib/Makefile` corresponds to the installation folder of CPLEX.
 
@@ -72,7 +72,7 @@ VFFVA.m is the MATLAB implementation that consists of a wrapper around the C ver
 
 + MATLAB
 
-+ IBM CPLEX 12.6.3. and above [Free academic version.](http://www-03.ibm.com/software/products/fr/ibmilogcpleoptistud)
++ IBM CPLEX 12.6.3. and above [Free academic version.](http://www.ibm.com/academic)
 
 + OpenMP comes be default in the latest gcc version.
 

@@ -45,7 +45,7 @@ CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 
 CLNDIRS   = -L$(CPLEXLIBDIR)
 CCLNFLAGS = -lconcert -lilocplex -lcplex -lm -lpthread
-CLNFLAGS  = -lcplex -lm -lpthread -lrt
+CLNFLAGS  = -lcplex -lm -lpthread -lrt -ldl
 
 
 
