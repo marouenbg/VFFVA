@@ -52,8 +52,8 @@ case "$os" in
 esac
 
 #install IBM CPLEX
-VERSION_CPLEX=12.7.1
-wget "https://ak-dsw-mul.dhe.ibm.com/sdfdl/v2/fulfill/CNI55ML/Xa.2/Xb.wzt5iJcvdsf_6y3jnv4KVpeZrR1ITpFqw_nGoUyO9WgOsMy3zfirXa-luwtfb9Wxyg/Xc.CNI55ML/cplex_studio12.7.1.linux-x86-64.bin/Xd./Xf.lPr.D1VC/Xg.15048651/Xi.kivuto/XY.scholars/XZ.Kt3-euG55mrPls29B3kHipq8x0U/cplex_studio12.7.1.linux-x86-64.bin"
+VERSION_CPLEX=1210
+wget "https://ak-dsw-mul.dhe.ibm.com/sdfdl/v2/fulfill/CC439ML/Xa.2/Xb.XwdHXGddWvrm/Xc.CC439ML/cplex_studio1210.linux-x86-64.bin/Xd./Xf.lPr.D1VC/Xg.10615575/Xi./XY.scholars/XZ.unQjp7Yeq28Xo4Z12DgJGXx--L4/cplex_studio1210.linux-x86-64.bin#anchor"
 chmod +x cplex_studio$VERSION_CPLEX.linux-x86-64.bin
 
 #specify install options
