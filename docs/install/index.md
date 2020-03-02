@@ -18,6 +18,7 @@ and non-shared memory systems.
 
 ### Quick install
 
+This will install OpenMPI, IBM ILOG CPLEX 12.10 (Make sure you register at IBM Academic Initiative), and will set the environment variables.
 ```
 cd lib
 source ./install.sh
