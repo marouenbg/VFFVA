@@ -11,7 +11,7 @@ LIBFORMAT  = static_pic
 
 ifndef TRAVIS
 	#Please define CPLEX path here
-	CPLEXDIR      = $(HOME)/CPLEX_Studio12.7.1/cplex
+	CPLEXDIR      = $(HOME)/CPLEX_Studio1210/cplex
 	#CPLEXDIR      = /work/projects/cplex/soft/cplex/12.6.3/cplex/
 else
 	CPLEXDIR       = /home/travis/travis/cplex
@@ -45,7 +45,7 @@ CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 
 CLNDIRS   = -L$(CPLEXLIBDIR)
 CCLNFLAGS = -lconcert -lilocplex -lcplex -lm -lpthread
-CLNFLAGS  = -lcplex -lm -lpthread -lrt
+CLNFLAGS  = -lcplex -lm -lpthread -lrt -ldl
 
 
 

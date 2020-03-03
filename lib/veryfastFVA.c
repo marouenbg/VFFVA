@@ -123,10 +123,10 @@ int main (int argc, char **argv){
 	
 	/*Check arg number*/
 	if (rank==0){
-		if(( argc == 2 ) | ( argc == 3 )){
+		if(( argc == 2 ) | ( argc == 3 ) | (argc == 4)){
 			printf("\nThe model supplied is %s\n", argv[1]);
 			strcpy(modelName,argv[1]);
-		}else if( argc > 3 ) {
+		}else if( argc > 4) {
 			printf("Too many arguments supplied.\n");
 			goto TERMINATE;
 		}else {
@@ -182,8 +182,8 @@ int main (int argc, char **argv){
 	status = CPXsetintparam (env, CPX_PARAM_AUXROOTTHREADS, 2);
 	
 	/*Scaling parameter if coupled model*/
-	if ( argc == 3 ) {
-		if (atoi(argv[2])==-1){
+	if ( argc == 4 ) {
+		if (atoi(argv[3])==-1){
 		/*Change of scaling parameter*/
 		scaling = 1;
 		status = CPXsetintparam (env, CPX_PARAM_SCAIND, -1);//1034 is index scaling parameter
@@ -191,7 +191,12 @@ int main (int argc, char **argv){
 		printf("SCAIND parameter is %d\n",curpreind);
 		}
 	}
-	
+
+	/*Read OptPercentage*/
+	if (argc > 2) {
+		optPerc=atoi(argv[2])/100.0;
+	}
+
 	/* Optimize the problem and obtain solution. */
 	clock_gettime(CLOCK_REALTIME, &tmstart);
 	status = CPXlpopt (env, lp);

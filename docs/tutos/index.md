@@ -53,10 +53,23 @@ ecoli=model;
 + Compare the results
 
 ```
-plot(minFluxVFFVA,minFluxFVA,'o')
+%Using a log-log scale 
+figure;
+loglog(abs([minFluxVFFVA;maxFluxVFFVA]),abs([minFluxFVA;maxFluxFVA]),'o')
 hold on;
-plot([-40 100],[-40 100])
+loglog([0.1 1000],[0.1 1000])
 ```
 
 As we can see the results lie perfectly on the identity line.
 ![](images/VFFVAbenchmark.png)
+
+We can further check the largest difference in precision between the two results.
+Since we are using the same solver, the results are nearly identical.
+
+```
+max([minFluxVFFVA;maxFluxVFFVA]-[minFluxFVA;maxFluxFVA])
+
+ans =
+
+   4.9314e-07
+```
