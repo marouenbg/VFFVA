@@ -123,10 +123,10 @@ int main (int argc, char **argv){
 	
 	/*Check arg number*/
 	if (rank==0){
-		if(( argc == 2 ) | ( argc == 3 )){
+		if(( argc == 2 ) | ( argc == 3 ) | (argc == 4)){
 			printf("\nThe model supplied is %s\n", argv[1]);
 			strcpy(modelName,argv[1]);
-		}else if( argc > 3 ) {
+		}else if( argc > 4) {
 			printf("Too many arguments supplied.\n");
 			goto TERMINATE;
 		}else {
