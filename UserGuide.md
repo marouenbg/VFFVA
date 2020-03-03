@@ -27,7 +27,7 @@ You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP p
 #### Installation:
 1. Install a free academic version of IBM ILOG CPLEX.
 
-	http://www-03.ibm.com/software/products/fr/ibmilogcpleoptistud
+	http://www.ibm.com/academic
 
 2. Check if you have openMP and MPI installed on your system. Usually, openMP comes by default with latest gcc distributions.
 
@@ -50,15 +50,17 @@ You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP p
 
 7. Run VFFVA like the following:
 
-	`mpirun -np a --bind-to none -x OMP_NUM_THREADS=b ./veryfastFVA ./models/c.mps d`
+	`mpirun -np a --bind-to none -x OMP_NUM_THREADS=b ./veryfastFVA ./models/c.mps d e`
 
 	a: Number of non-memory sharing cores
 
 	b: Number of memory-sharing threads
 
-	c: model name, a selection of models is provided in model folder
+	c: Model name, a selection of models is provided in model folder
 
-	d: optional if not specified scaling (SCAIND) parameter is set to default
+	d: Optional, optimization percentage of optimal objective function. Integer between 0 and 100.
+
+	e: Optional if not specified scaling (SCAIND) parameter is set to default
 
 	if set to -1, scaling is deactivated
 
@@ -146,7 +148,3 @@ Regarding VFFVA, please set environment variables `OMP_PROC_BIND=FALSE` and expo
 	- `EmatrixCoupledAnalysisFFVA_LA.sh`: runs FFVA on E_Matrix_coupled model and saves loading and analysis time.
 	- `EmatrixCoupledAnalysisVFFVA_LA.sh`: runs VFFVA on E_Matrix_coupled model and saves loading and analysis time.
 
-#### Important note
-VFFVA is run on a suboptimal objective equal to 90% the optimal objective of the original problem, because with large models, numerical infeasibilities can occur with optimisation percentage
-equal to 100%. You can change the optPerc varibale to the desired value. In the future, this variable
-will be passed in the VFFVA call.

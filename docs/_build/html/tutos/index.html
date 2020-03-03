@@ -237,7 +237,7 @@ and VFFVA.</p>
 <img alt="../_images/VFFVAbenchmark.png" src="../_images/VFFVAbenchmark.png" /></p>
 <p>We can further check the largest difference in precision between the two results.
 Since we are using the same solver, the results are nearly identical.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">max</span><span class="p">([</span><span class="n">minFluxVFFVA</span><span class="p">;</span><span class="n">maxFluxVFFVA</span><span class="p">]</span><span class="o">-</span><span class="p">[</span><span class="n">minFluxFVA</span><span class="p">;</span><span class="n">maxFluxFVA</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">([</span><span class="n">minFluxVFFVA</span><span class="p">;</span><span class="n">maxFluxVFFVA</span><span class="p">]</span><span class="o">-</span><span class="p">[</span><span class="n">minFluxFVA</span><span class="p">;</span><span class="n">maxFluxFVA</span><span class="p">]))</span>
 
 <span class="n">ans</span> <span class="o">=</span>
 

@@ -67,7 +67,7 @@ We can further check the largest difference in precision between the two results
 Since we are using the same solver, the results are nearly identical.
 
 ```
-max([minFluxVFFVA;maxFluxVFFVA]-[minFluxFVA;maxFluxFVA])
+max(abs([minFluxVFFVA;maxFluxVFFVA]-[minFluxFVA;maxFluxFVA]))
 
 ans =
 

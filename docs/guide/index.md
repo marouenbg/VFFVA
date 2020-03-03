@@ -18,7 +18,7 @@ Replace the following variables with your own parameters:
 
 + model.mps: the metabolic model in `.mps` format. To convert a model in `.mat` format to `.mps`, you can use the provided converter `convertProblem.m`
 
-+ OPTPERC: Optimization percentage of the objective value (0-100). The default is 90, where VFFVa will be computed with the objective value set to 90% of the optimal
++ OPTPERC: Optimization percentage of the objective value (0-100). The default is 90, where VFFVA will be computed with the objective value set to 90% of the optimal
 objective.
 
 
