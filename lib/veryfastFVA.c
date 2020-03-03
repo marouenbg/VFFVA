@@ -193,7 +193,7 @@ int main (int argc, char **argv){
 	}
 
 	/*Read OptPercentage*/
-	if (argc > 23) {
+	if (argc > 2) {
 		optPerc=atoi(argv[2])/100.0;
 	}
 
