@@ -8,7 +8,7 @@ After installing the dependencies of `VFFVA`, you can build the binaries at the 
 
 Then call `VFFVA` as follows:
 
-`mpirun -np nCores --bind-to none -x OMP_NUM_THREADS=nThreads veryfastFVA model.mps SCAIND`
+`mpirun -np nCores --bind-to none -x OMP_NUM_THREADS=nThreads veryfastFVA model.mps OPTPERC SCAIND`
 
 Replace the following variables with your own parameters:
 
@@ -17,6 +17,10 @@ Replace the following variables with your own parameters:
 + nThreads: the number of shared memory threads within one core
 
 + model.mps: the metabolic model in `.mps` format. To convert a model in `.mat` format to `.mps`, you can use the provided converter `convertProblem.m`
+
++ OPTPERC: Optimization percentage of the objective value (0-100). The default is 90, where VFFVa will be computed with the objective value set to 90% of the optimal
+objective.
+
 
 + SCAIND: (optional) corresponds to the scaling CPLEX parameter SCAIND and can take the values 0 (equilibration scaling: default), 1(aggressive scaling), -1 (no scaling).
 scaling is usually desactivated with tightly constrained metabolic model such as coupled models to avoid numerical instabilities and large solution times.
@@ -51,6 +55,8 @@ Then VFFVA.m can be called from MATLAB using the following function description:
     scaling:          CPLEX parameter. It corresponds to SCAIND parameter (Default = 0).
                       -1: no scaling; 0: equilibration scaling; 1: more aggressive scaling.
                       more information here: https://www.ibm.com/support/knowledgecenter/SSSA5P_12.7.0/ilog.odms.cplex.help/CPLEX/Parameters/topics/ScaInd.html.
+    optPerc:          Percentage of the optimal objective used in FVA. Float between 0 and 100. For example, when set to 90
+		      FVA will be computed on 90% of the optimal objective. 
     memAff:           none, core, or socket. (Default = none). This an OpenMPI parameter, more 
                       information here: https://www.open-mpi.org/faq/?category=tuning#using-paffinity-v1.4.
     schedule:         Dynamic, static, or guided. (Default = dynamic). This is an OpenMP parameter, more

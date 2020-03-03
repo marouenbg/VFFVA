@@ -182,8 +182,8 @@ int main (int argc, char **argv){
 	status = CPXsetintparam (env, CPX_PARAM_AUXROOTTHREADS, 2);
 	
 	/*Scaling parameter if coupled model*/
-	if ( argc == 3 ) {
-		if (atoi(argv[2])==-1){
+	if ( argc == 4 ) {
+		if (atoi(argv[3])==-1){
 		/*Change of scaling parameter*/
 		scaling = 1;
 		status = CPXsetintparam (env, CPX_PARAM_SCAIND, -1);//1034 is index scaling parameter
@@ -191,7 +191,12 @@ int main (int argc, char **argv){
 		printf("SCAIND parameter is %d\n",curpreind);
 		}
 	}
-	
+
+	/*Read OptPercentage*/
+	if (argc == 3) {
+		optPerc=atoi(argv[2])
+	}
+
 	/* Optimize the problem and obtain solution. */
 	clock_gettime(CLOCK_REALTIME, &tmstart);
 	status = CPXlpopt (env, lp);
