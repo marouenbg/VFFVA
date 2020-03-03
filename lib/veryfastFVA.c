@@ -194,7 +194,7 @@ int main (int argc, char **argv){
 
 	/*Read OptPercentage*/
 	if (argc > 23) {
-		optPerc=atoi(argv[2])/100.0
+		optPerc=atoi(argv[2])/100.0;
 	}
 
 	/* Optimize the problem and obtain solution. */
