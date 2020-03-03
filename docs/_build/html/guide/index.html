@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Usage guide &mdash; VFFVA v0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'v0.1',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorials" href="../tutos/index.html" />
+    <link rel="prev" title="Installation guide" href="../install/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> VFFVA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Summary</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#c-version">C version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matlab-version">MATLAB version</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutos/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license/index.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">VFFVA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Usage guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/guide/index.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="usage-guide">
+<h1>Usage guide<a class="headerlink" href="#usage-guide" title="Permalink to this headline">¶</a></h1>
+<p>The following provides the usage guide for both the C and MATLAB versions of VFFVA.</p>
+<div class="section" id="c-version">
+<h2>C version<a class="headerlink" href="#c-version" title="Permalink to this headline">¶</a></h2>
+<p>After installing the dependencies of <code class="docutils literal notranslate"><span class="pre">VFFVA</span></code>, you can build the binaries at the root of <code class="docutils literal notranslate"><span class="pre">lib</span></code> using <code class="docutils literal notranslate"><span class="pre">make</span></code>.</p>
+<p>Then call <code class="docutils literal notranslate"><span class="pre">VFFVA</span></code> as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">nCores</span> <span class="pre">--bind-to</span> <span class="pre">none</span> <span class="pre">-x</span> <span class="pre">OMP_NUM_THREADS=nThreads</span> <span class="pre">veryfastFVA</span> <span class="pre">model.mps</span> <span class="pre">OPTPERC</span> <span class="pre">SCAIND</span></code></p>
+<p>Replace the following variables with your own parameters:</p>
+<ul class="simple">
+<li>nCores: the number of non-shared memory cores you wish to use for the analysis</li>
+<li>nThreads: the number of shared memory threads within one core</li>
+<li>model.mps: the metabolic model in <code class="docutils literal notranslate"><span class="pre">.mps</span></code> format. To convert a model in <code class="docutils literal notranslate"><span class="pre">.mat</span></code> format to <code class="docutils literal notranslate"><span class="pre">.mps</span></code>, you can use the provided converter <code class="docutils literal notranslate"><span class="pre">convertProblem.m</span></code></li>
+<li>OPTPERC: Optimization percentage of the objective value (0-100). The default is 90, where VFFVa will be computed with the objective value set to 90% of the optimal
+objective.</li>
+<li>SCAIND: (optional) corresponds to the scaling CPLEX parameter SCAIND and can take the values 0 (equilibration scaling: default), 1(aggressive scaling), -1 (no scaling).
+scaling is usually desactivated with tightly constrained metabolic model such as coupled models to avoid numerical instabilities and large solution times.</li>
+</ul>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-np</span> <span class="pre">2</span> <span class="pre">--bind-to</span> <span class="pre">none</span> <span class="pre">-x</span> <span class="pre">OMP_NUM_THREADS=4</span> <span class="pre">veryfastFVA</span> <span class="pre">ecoli_core.mps</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VFFVA</span></code> will perform 2n Linear Programs (LP), where n is the number of reactions in a metabolic model, corresponding to
+a minimization and a maximization in each dimension.</p>
+<p>The ouput file is saved as <code class="docutils literal notranslate"><span class="pre">modeloutput.csv</span></code>, with model is the name of the metabolic model.</p>
+</div>
+<div class="section" id="matlab-version">
+<h2>MATLAB version<a class="headerlink" href="#matlab-version" title="Permalink to this headline">¶</a></h2>
+<p>The MATLAB version VFFVA.m is a wrapper around the C versiobn, which means that the previous installation steps of the C version have to be performed.</p>
+<p>Then VFFVA.m can be called from MATLAB using the following function description:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+ USAGE:
+
+    [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk)
+
+ INPUT:
+    nCores:           Number of non-shared memory cores/machines.
+    nThreads:         Number of shared memory threads in each core/machine.
+    model:            .mps format: path to metabolic model in .mps format.
+                      COBRA format: will be automatically formatted to .mps format. Make sure to add VFFVA folder to
+                      your MATLAB path to access the conversion script.
+
+ OPTIONAL INPUTS:
+    scaling:          CPLEX parameter. It corresponds to SCAIND parameter (Default = 0).
+                      -1: no scaling; 0: equilibration scaling; 1: more aggressive scaling.
+                      more information here: https://www.ibm.com/support/knowledgecenter/SSSA5P_12.7.0/ilog.odms.cplex.help/CPLEX/Parameters/topics/ScaInd.html.
+    optPerc:          Percentage of the optimal objective used in FVA. Float between 0 and 100. For example, when set to 90
+		      FVA will be computed on 90% of the optimal objective. 
+    memAff:           none, core, or socket. (Default = none). This an OpenMPI parameter, more 
+                      information here: https://www.open-mpi.org/faq/?category=tuning#using-paffinity-v1.4.
+    schedule:         Dynamic, static, or guided. (Default = dynamic). This is an OpenMP parameter, more
+                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
+    nChunk:           Number of reactions in each chunk (Default = 50). This is an OpenMO parameter, more
+                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
+
+ OUTPUTS:
+    minFlux:          (n,1) vector of minimal flux values for each reaction.
+    maxFlux:          (n,1) vector of maximal flux values for each reaction.
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../tutos/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../install/index.html" class="btn btn-neutral float-left" title="Installation guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Marouen Ben Guebila
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
