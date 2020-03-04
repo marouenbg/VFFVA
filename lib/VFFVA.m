@@ -5,7 +5,7 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 % 
 % USAGE:
 %
-%    [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk)
+%    [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc)
 %
 % INPUT:
 %    nCores:           Number of non-shared memory cores/machines.
@@ -18,13 +18,13 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 %    scaling:          CPLEX parameter. It corresponds to SCAIND parameter (Default = 0).
 %                      -1: no scaling; 0: equilibration scaling; 1: more aggressive scaling.
 %                      more information here: https://www.ibm.com/support/knowledgecenter/SSSA5P_12.7.0/ilog.odms.cplex.help/CPLEX/Parameters/topics/ScaInd.html.
-%    optPerc:          Percentage of the optimal objective used in FVA. Float between 0 and 100. For example, when set to 90
+%    optPerc:          Percentage of the optimal objective used in FVA. Integer between 0 and 100. For example, when set to 90
 %                      FVA will be computed on 90% of the optimal objective.
-%    memAff:           none, core, or socket. (Default = none). This an OpenMPI parameter, more 
+%    memAff:           'none', 'core', or 'socket'. (Default = 'none'). This an OpenMPI parameter, more 
 %                      information here: https://www.open-mpi.org/faq/?category=tuning#using-paffinity-v1.4.
-%    schedule:         Dynamic, static, or guided. (Default = dynamic). This is an OpenMP parameter, more
+%    schedule:         'dynamic', 'static', or 'guided'. (Default = 'dynamic'). This is an OpenMP parameter, more
 %                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
-%    nChunk:           Number of reactions in each chunk (Default = 50). This is an OpenMO parameter, more
+%    nChunk:           Number of reactions in each chunk (Default = 50). This is an OpenMP parameter, more
 %                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
 %
 % OUTPUTS:
