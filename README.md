@@ -59,7 +59,7 @@ VFFVA has been presented in the poster session of the [2017 International Confer
 
 ### License
 
-The software is free ańd is licensed under the MIT license, see the file [LICENSE](<https://github.com/marouenbg/VFFVA/blob/master/LICENSE.txt>) for details.
+The software is free and is licensed under the MIT license, see the file [LICENSE](<https://github.com/marouenbg/VFFVA/blob/master/LICENSE.txt>) for details.
 
 ### Feedback/Issues
 
