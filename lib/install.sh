@@ -27,7 +27,7 @@ export PATH=$HOME/open-mpi/bin:$PATH
 
 #2. install IBM CPLEX
 VERSION_CPLEX=1210
-wget "https://ak-dsw-mul.dhe.ibm.com/sdfdl/v2/fulfill/CC439ML/Xa.2/Xb.XwdHXGddWvrm/Xc.CC439ML/cplex_studio1210.linux-x86-64.bin/Xd./Xf.lPr.D1VC/Xg.10615575/Xi./XY.scholars/XZ.unQjp7Yeq28Xo4Z12DgJGXx--L4/cplex_studio1210.linux-x86-64.bin#anchor"
+wget "https://ak-dsw-mul.dhe.ibm.com/sdfdl/v2/fulfill/CC439ML/Xa.2/Xb.XwdHXGdhWvrm/Xc.CC439ML/cplex_studio1210.linux-x86-64.bin/Xd./Xf.lPr.D1VC/Xg.10736638/Xi./XY.scholars/XZ.UBs6UV1K_zA_5uS6T9I81YuWNmI/cplex_studio1210.linux-x86-64.bin#anchor"
 chmod +x cplex_studio$VERSION_CPLEX.linux-x86-64.bin
 
 #specify install options
