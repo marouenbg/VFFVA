@@ -27,7 +27,7 @@ static void
    free_and_null     (char **ptr),
    usage             (char *progname);
    
-void fva(CPXLPptr lp, double objval, int n, int scaling, int objInd,double *minFlux,double *maxFlux, int rank, int numprocs){
+void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double *maxFlux, int rank, int numprocs, int *rxns){
 	/* The actual Open MP FVA called with CPLEX env, CPLEX LP
 	the optimal LP solution and n the number of rows
 	*/
@@ -37,7 +37,7 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, int objInd,double *minF
 	int i,j,tid,nthreads,solstat;
 	
 	/*optimisation loop Max:j=-1 Min:j=+1*/
-	#pragma omp parallel private(tid,i,j,solstat,status,objval) shared(minFlux,maxFlux)
+	#pragma omp parallel private(tid,i,j,solstat,status,objval) shared(minFlux,maxFlux,rxns)
 		{
 			int iters = 0;
 			double wTime = omp_get_wtime();
@@ -69,19 +69,19 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, int objInd,double *minF
 				for(i=rank*n/numprocs;i<(rank+1)*n/numprocs;i++){
 					status= CPXchgobjsen (env, lpi, j);
 					iters++;
-					status = CPXchgobj (env, lpi, cnt, &i, &one);//change obj index
+					status = CPXchgobj (env, lpi, cnt, &rxns[i], &one);//change obj index
 					status = CPXlpopt (env, lpi);//solve LP
 					status = CPXgetobjval(env, lpi, &objval);
 					solstat = (double)CPXgetstat(env, lpi);
 					//save results
 					if(j==-1){//save results
-						maxFlux[i]   =objval;
+						maxFlux[rxns[i]]   =objval;
 						//maxsolStat[i]=solstat;
 					}else{
-						minFlux[i]   =objval;
+						minFlux[rxns[i]]   =objval;
 						//minsolStat[i]=solstat;
 					}
-					status = CPXchgobj (env, lpi, cnt, &i, &zero);//set obj index to zero for next optim
+					status = CPXchgobj (env, lpi, cnt, &rxns[i], &zero);//set obj index to zero for next optim
 				}	
 			}	
 			
@@ -114,6 +114,7 @@ int main (int argc, char **argv){
 	FILE *fp;
 	char fileName[100] = "output.csv";
 	char modelName[100];
+        int *rxns;
 	
 	/*Initialize MPI*/
 	MPI_Init(&argc, &argv);
@@ -207,8 +208,31 @@ int main (int argc, char **argv){
 	
 	/*Problem size */
 	m = CPXgetnumrows (env, lp);
-	n = CPXgetnumcols (env, lp);
 	
+        /*Rxns to optimize */
+        if ( argc==5 ) {
+            FILE *fpp;
+            fpp = fopen(argv[5], "r");
+            if (fp == NULL) {
+                fprintf(stderr, "Error reading file\n");
+                return 1;
+            }
+            while (fscanf(fp, " %d", &rxns[n]) == 1) {
+                n++;
+            }
+            for (size_t i = 0; i < n; i++) {
+                printf("%d\n", rxns[i]);
+            }
+
+            fclose(fpp);
+        }else{
+            n = CPXgetnumcols (env, lp);
+            rxns = (int*)calloc(n, sizeof(int));
+            for (int i=0; i < n; i++){
+               rxns[i]=i;
+            }
+        }
+
 	/*Round objective value*/
 	status = CPXgetobjval(env, lp, &objval);
 	solstat = (double)CPXgetstat(env, lp);
@@ -247,13 +271,12 @@ int main (int argc, char **argv){
 	maxFlux = (double*)calloc(n, sizeof(double));
 	globalminFlux = (double*)calloc(n, sizeof(double));
 	globalmaxFlux = (double*)calloc(n, sizeof(double));
-
     
 	/*Disable dynamic teams*/
 	omp_set_dynamic(0); 
 	
 	/* FVA */
-	fva(lp, robjval, n, scaling, objInd, minFlux, maxFlux, rank, numprocs);
+	fva(lp, robjval, n, scaling, minFlux, maxFlux, rank, numprocs, rxns);
 	
 	/*Reduce results*/
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -270,18 +293,18 @@ int main (int argc, char **argv){
 	}*/
 	
 	/*Save to csv file*/
-	for(i=strlen(modelName)-4;i<strlen(modelName);i++){
-		modelName[i]=0;
-	}
-	strcat(modelName, fileName);
-	fp=fopen(modelName,"w+");
-	fprintf(fp,"minFlux,maxFlux\n");
-	if(rank==0){
+        if(rank==0){
+            for(i=strlen(modelName)-4;i<strlen(modelName);i++){
+	  	    modelName[i]=0;
+	    }
+	    strcat(modelName, fileName);
+            fp=fopen(modelName,"w+");
+	    fprintf(fp,"minFlux,maxFlux\n");
 		for(i=0;i<n;i++){
 			fprintf(fp,"%f,%f\n",globalminFlux[i],globalmaxFlux[i]);
 		}
+            fclose(fp);
 	}
-	fclose(fp);
 	
 	/*Finalize*/
 	clock_gettime(CLOCK_REALTIME, &now);
