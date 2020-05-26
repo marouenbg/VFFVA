@@ -55,7 +55,7 @@ end
 setenv('PATH', [getenv('PATH') ':' getenv('HOME') '/open-mpi/bin'])
 
 %Check if MPI is installed
-[status,cmdout]=system('mpirun');
+[status,cmdout]=system('mpirun --version');
 if status==127
     error(['MPI and/or CPLEX nont installed, please follow the install guide'...
     'or use the quick install script']);
