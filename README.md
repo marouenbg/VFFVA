@@ -14,7 +14,7 @@ The supported languages are: C (veryfastFVA.c) with wrappers in  MATLAB (VFFVA.m
 
 Please refer to the [documentation](https://vffva.readthedocs.io/en/latest/) and the [UserGuide](UserGuide.md) for veryfastFVA (VFFVA) usage.
 
-Add the project folder to your MATLAB path and save it.
+In MATLAB, add the project folder to your MATLAB path and save it, then use `VFFVA()`. In Python, `import VFFA` to use `VFFVA()`.
 
 For the comparison with fastFVA (FFVA), you can install FFVA [here](http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva).
 

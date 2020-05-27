@@ -9,7 +9,7 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
     Guebila, Marouen Ben. "Dynamic load balancing enables large-scale flux variability analysis." bioRxiv (2018): 440701.
 
     USAGE:
-    minFlux,maxFlux=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc)
+    minFlux,maxFlux=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex)
 
     :param nCores:   Number of non-shared memory cores/machines.
     :param nThreads: Number of shared memory threads in each core/machine.

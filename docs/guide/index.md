@@ -21,9 +21,10 @@ Replace the following variables with your own parameters:
 + OPTPERC: Optimization percentage of the objective value (0-100). The default is 90, where VFFVa will be computed with the objective value set to 90% of the optimal
 objective.
 
-
 + SCAIND: (optional) corresponds to the scaling CPLEX parameter SCAIND and can take the values 0 (equilibration scaling: default), 1(aggressive scaling), -1 (no scaling).
 scaling is usually desactivated with tightly constrained metabolic model such as coupled models to avoid numerical instabilities and large solution times.
+
++ ex: .csv file containing indices of reactions to optimize.
 
 Example: `mpirun -np 2 --bind-to none -x OMP_NUM_THREADS=4 veryfastFVA ecoli_core.mps`
 
@@ -77,12 +78,8 @@ Then VFFVA.py can be imported into a Python 3 script  using the following functi
 
 ```
 
-    VFFVA performs Very Fast Flux Variability Analysis (VFFVA). VFFVA is a parallel implementation of FVA that
-    allows dynamically assigning reactions to each worker depending on their computational load
-    Guebila, Marouen Ben. "Dynamic load balancing enables large-scale flux variability analysis." bioRxiv (2018): 440701.
-
     USAGE:
-    minFlux,maxFlux=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc)
+    minFlux,maxFlux=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex)
 
     :param nCores:   Number of non-shared memory cores/machines.
     :param nThreads: Number of shared memory threads in each core/machine.
