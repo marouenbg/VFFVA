@@ -1,8 +1,9 @@
 import os
 import pandas as pd
 import numpy as np
+import csv
 
-def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic', nChunk=50, optPerc=90, ex=''):
+def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic', nChunk=50, optPerc=90, ex=[]):
     '''
     VFFVA performs Very Fast Flux Variability Analysis (VFFVA). VFFVA is a parallel implementation of FVA that
     allows dynamically assigning reactions to each worker depending on their computational load
@@ -40,14 +41,18 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
     os.environ["OMP_SCHEDUELE"] = schedule+str(nChunk)
 
     # Set reactions to optimize
-    if ex!='':
-        np.savetxt("rxns.csv", ex, delimiter=",")
+    if ex!=[]:
+        with open('rxns.csv', 'w', newline='') as myfile:
+            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+            wr.writerow(ex)
         ex='rxns.csv'
+    else:
+        ex=''
 
     # Call VFFVA
     status = os.system(
         'mpirun -np ' + str(nCores) + ' --bind-to ' + str(memAff) + ' -x OMP_NUM_THREADS=' + str(nThreads) +
-         ' ./veryfastFVA ' + model + ' ' + str(optPerc) +  ' ' + str(scaling) + ' ' + ex)
+         ' ./veryfastFVA ' + model + ' ' + str(optPerc) + ' ' + str(scaling) + ' ' + ex)
 
     # Fetch results
     resultFile = model[:-4] + 'output.csv'
@@ -63,5 +68,5 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
     return minFlux,maxFlux
 
 def test_VFFVA():
-    minFlux,maxFlux=VFFVA(2, 2, '../data/models/Ecoli_core/Ecoli_core.mps')
+    minFlux,maxFlux=VFFVA(2, 2, '../data/models/Ecoli_core/Ecoli_core.mps',ex=[1,2,10,5,46])
     print(minFlux)
