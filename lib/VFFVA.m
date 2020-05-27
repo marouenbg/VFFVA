@@ -102,7 +102,6 @@ delete(resultFile)
 if ~ischar(model)
     delete('myVFFVAmodel.mps')
 end
-
 if ~isempty(ex)
     delete(ex);
 end

@@ -87,3 +87,25 @@ source ./install.sh
 make
 ```
 
+## Python
+
+VFFVA.py is the Python3 implementation that consists of a wrapper around the C version.
+
+### Requirements
++ Linux-based system.
+
++ Python 3
+
++ IBM CPLEX 12.6.3. and above [Free academic version.](http://www.ibm.com/academic)
+
++ OpenMP comes be default in the latest gcc version.
+
++ MPI through the OpenMPI 1.10.3 implementation.
+
+### Quick install
+
+```
+cd lib
+source ./install.sh
+make
+```

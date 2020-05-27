@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-import numpy as np
 import csv
 
 def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic', nChunk=50, optPerc=90, ex=[]):
@@ -70,3 +69,5 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
 def test_VFFVA():
     minFlux,maxFlux=VFFVA(2, 2, '../data/models/Ecoli_core/Ecoli_core.mps',ex=[1,2,10,5,46])
     print(minFlux)
+
+test_VFFVA()
