@@ -212,22 +212,23 @@ int main (int argc, char **argv){
 
         /*Rxns to optimize */
         if ( argc==5 ){
-            if (rank == 0) {
-                rxns = (int*)calloc(nAll, sizeof(int));//realloc this
+            rxns = (int*)calloc(nAll, sizeof(int));//realloc this
+            int readFile=1;
+            if ( readFile==1 ) {
                 FILE *fpp;
                 fpp = fopen(argv[4], "r");
                 if (fpp == NULL) {
                     fprintf(stderr, "Error reading file\n");
                      return 1;
                  }
-                 char buf[1024];//realloc this
+                 char buf[2048];//realloc this
                  n = 0;
                  while (fgets(buf, 1024, fpp)) {
 
                      char *field = strtok(buf, ",");
                      while (field) {
 
-                        printf("%s\n", field);
+                        //printf("%s\n", field);
                         rxns[n] = atoi(field);
                         field   = strtok(NULL, ",");
 
@@ -236,9 +237,7 @@ int main (int argc, char **argv){
                 }
 	        fclose(fpp);
             }
-            /*Send to all processes */
-            MPI_Barrier(MPI_COMM_WORLD);
-            MPI_Bcast(rxns, nAll, MPI_INT, 0, MPI_COMM_WORLD);
+            rxns = (int *) realloc(rxns, n*sizeof(int));
         }else{
             n = nAll;
             rxns = (int*)calloc(n, sizeof(int));
