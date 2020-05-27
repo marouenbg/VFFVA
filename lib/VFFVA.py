@@ -1,7 +1,8 @@
 import os
 import pandas as pd
+import numpy as np
 
-def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic', nChunk=50, optPerc=90):
+def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic', nChunk=50, optPerc=90, ex=''):
     '''
     VFFVA performs Very Fast Flux Variability Analysis (VFFVA). VFFVA is a parallel implementation of FVA that
     allows dynamically assigning reactions to each worker depending on their computational load
@@ -24,6 +25,7 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
     :param optPerc:  Percentage of the optimal objective used in FVA. Integer between 0 and 100. For example, when set to 90
                      FVA will be computed on 90% of the optimal objective.
+    :param ex:       Indices of reactions to optimize as a numpy array.  (Default, all reactions)
     :return:
            minFlux:          (n,1) vector of minimal flux values for each reaction.
            maxFlux:          (n,1) vector of maximal flux values for each reaction.
@@ -37,10 +39,15 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
     # Set schedule and chunk size parameters
     os.environ["OMP_SCHEDUELE"] = schedule+str(nChunk)
 
+    # Set reactions to optimize
+    if ex!='':
+        np.savetxt("rxns.csv", ex, delimiter=",")
+        ex='rxns.csv'
+
     # Call VFFVA
     status = os.system(
         'mpirun -np ' + str(nCores) + ' --bind-to ' + str(memAff) + ' -x OMP_NUM_THREADS=' + str(nThreads) +
-         ' ./veryfastFVA ' + model + ' ' + str(optPerc) +  ' ' + str(scaling))
+         ' ./veryfastFVA ' + model + ' ' + str(optPerc) +  ' ' + str(scaling) + ' ' + ex)
 
     # Fetch results
     resultFile = model[:-4] + 'output.csv'
@@ -50,6 +57,8 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
 
     # remove result file
     os.system('rm '+resultFile)
+    if ex!='':
+        os.system('rm '+ex)
 
     return minFlux,maxFlux
 

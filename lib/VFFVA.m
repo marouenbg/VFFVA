@@ -1,4 +1,4 @@
-function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc)
+function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex)
 % performs Very Fast Flux Variability Analysis (VFFVA). VFFVA is a parallel implementation of FVA that
 % allows dynamically assigning reactions to each worker depending on their computational load
 % Guebila, Marouen Ben. "Dynamic load balancing enables large-scale flux variability analysis." bioRxiv (2018): 440701.
@@ -26,6 +26,7 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 %                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
 %    nChunk:           Number of reactions in each chunk (Default = 50). This is an OpenMP parameter, more
 %                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
+%    ex:               Indices of reactions to optimize. (Default, all reactions)
 %
 % OUTPUTS:
 %    minFlux:          (n,1) vector of minimal flux values for each reaction.
@@ -50,6 +51,15 @@ end
 if nargin<8
    optPerc=90;
 end
+if nargin<9
+   ex='';
+end
+
+% set reactions to optimize
+if ~isempty(ex)
+    writematrix(ex,'rxns.csv');
+    ex='rxns.csv';
+end
 
 %Set install folder of MPI
 setenv('PATH', [getenv('PATH') ':' getenv('HOME') '/open-mpi/bin'])
@@ -67,7 +77,7 @@ if ~ischar(model)
 	%Determine if model is coupled
 	if isfield(model,'A')
 		coupled=1;
-	%If mode is coupled, schedule should be set to -1
+	    %If mode is coupled, schedule should be set to -1
 	else
 		coupled=0;
     end
@@ -80,7 +90,7 @@ setenv('OMP_SCHEDUELE', [schedule ',' num2str(nChunk)])
 
 %Call VFFVA
 [status,cmdout]=system(['mpirun -np ' num2str(nCores) ' --bind-to ' num2str(memAff) ' -x OMP_NUM_THREADS=' num2str(nThreads)...
-    ' ./veryfastFVA ' model ' ' num2str(optPerc)  ' ' num2str(scaling)]);
+    ' ./veryfastFVA ' model ' ' num2str(optPerc)  ' ' num2str(scaling) ' ' ex]);
 
 %Fetch results
 resultFile=[model(1:end-4) 'output.csv'];
@@ -91,6 +101,10 @@ minFlux=results.minFlux; maxFlux=results.maxFlux;
 delete(resultFile)
 if ~ischar(model)
     delete('myVFFVAmodel.mps')
+end
+
+if ~isempty(ex)
+    delete(ex);
 end
 
 end
