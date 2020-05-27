@@ -27,7 +27,7 @@ static void
    free_and_null     (char **ptr),
    usage             (char *progname);
    
-void fva(CPXLPptr lp, double objval, int n, int scaling, int objInd,double *minFlux,double *maxFlux, int rank, int numprocs){
+void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double *maxFlux, int rank, int numprocs, int *rxns){
 	/* The actual Open MP FVA called with CPLEX env, CPLEX LP
 	the optimal LP solution and n the number of rows
 	*/
@@ -69,7 +69,7 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, int objInd,double *minF
 				for(i=rank*n/numprocs;i<(rank+1)*n/numprocs;i++){
 					status= CPXchgobjsen (env, lpi, j);
 					iters++;
-					status = CPXchgobj (env, lpi, cnt, &i, &one);//change obj index
+					status = CPXchgobj (env, lpi, cnt, &rxns[i], &one);//change obj index
 					status = CPXlpopt (env, lpi);//solve LP
 					status = CPXgetobjval(env, lpi, &objval);
 					solstat = (double)CPXgetstat(env, lpi);
@@ -81,7 +81,7 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, int objInd,double *minF
 						minFlux[i]   =objval;
 						//minsolStat[i]=solstat;
 					}
-					status = CPXchgobj (env, lpi, cnt, &i, &zero);//set obj index to zero for next optim
+					status = CPXchgobj (env, lpi, cnt, &rxns[i], &zero);//set obj index to zero for next optim
 				}	
 			}	
 			
@@ -98,11 +98,11 @@ int main (int argc, char **argv){
 	double *lb       = NULL;
 	double *ub       = NULL;
 	double objval, robjval, zero=0;
-	int    solstat;
+	int    solstat,nAll;
 	int cnt=1;
 	CPXENVptr     env = NULL;//CPLEX environment
 	CPXLPptr      lp = NULL;//LP problem
-	int           curpreind,i, j,m,n,scaling=0;
+	int           curpreind,i,j,m,n,scaling=0;
 	const double tol = 1.0e-6;//tolerance for the optimisation problem
 	double optPerc = 0.9, *obj;
 	int objInd;
@@ -114,6 +114,7 @@ int main (int argc, char **argv){
 	FILE *fp;
 	char fileName[100] = "output.csv";
 	char modelName[100];
+        int *rxns;
 	
 	/*Initialize MPI*/
 	MPI_Init(&argc, &argv);
@@ -123,10 +124,10 @@ int main (int argc, char **argv){
 	
 	/*Check arg number*/
 	if (rank==0){
-		if(( argc == 2 ) | ( argc == 3 ) | (argc == 4)){
+		if(( argc == 2 ) | ( argc == 3 ) | (argc == 4) | (argc == 5)){
 			printf("\nThe model supplied is %s\n", argv[1]);
 			strcpy(modelName,argv[1]);
-		}else if( argc > 4) {
+		}else if( argc > 5) {
 			printf("Too many arguments supplied.\n");
 			goto TERMINATE;
 		}else {
@@ -207,8 +208,44 @@ int main (int argc, char **argv){
 	
 	/*Problem size */
 	m = CPXgetnumrows (env, lp);
-	n = CPXgetnumcols (env, lp);
-	
+	nAll = CPXgetnumcols (env, lp);
+
+        /*Rxns to optimize */
+        if ( argc==5 ){
+            rxns = (int*)calloc(nAll, sizeof(int));//realloc this
+            int readFile=1;
+            if ( readFile==1 ) {
+                FILE *fpp;
+                fpp = fopen(argv[4], "r");
+                if (fpp == NULL) {
+                    fprintf(stderr, "Error reading file\n");
+                     return 1;
+                 }
+                 char buf[2048];//realloc this
+                 n = 0;
+                 while (fgets(buf, 1024, fpp)) {
+
+                     char *field = strtok(buf, ",");
+                     while (field) {
+
+                        //printf("%s\n", field);
+                        rxns[n] = atoi(field);
+                        field   = strtok(NULL, ",");
+
+                        n++;
+                    }
+                }
+	        fclose(fpp);
+            }
+            rxns = (int *) realloc(rxns, n*sizeof(int));
+        }else{
+            n = nAll;
+            rxns = (int*)calloc(n, sizeof(int));
+            for (int i=0; i < n; i++){
+               rxns[i]=i;
+            }
+        }
+
 	/*Round objective value*/
 	status = CPXgetobjval(env, lp, &objval);
 	solstat = (double)CPXgetstat(env, lp);
@@ -219,9 +256,9 @@ int main (int argc, char **argv){
 	robjval = floor(objval/tol)*tol*optPerc;//because max
 	
 	/*Look for the index of the objective*/
-	obj =(double*)calloc(n, sizeof(double));
-	status = CPXgetobj (env, lp, obj, 0, n-1);
-	for(i=0;i<n;i++){
+	obj =(double*)calloc(nAll, sizeof(double));
+	status = CPXgetobj (env, lp, obj, 0, nAll-1);
+	for(i=0;i<nAll;i++){
 		if(obj[i]){
 			objInd=i;
 		}		
@@ -232,7 +269,7 @@ int main (int argc, char **argv){
 		printf ("Solution value  = %f\n", objval);
 		printf ("Solution status = %d\n", solstat);
 		printf("Rounded solution at %.f%%  is %f\n",optPerc*100,robjval);
-		printf ("Solving %d reations !\n", n);
+		printf ("Solving %d reactions !\n", n);
 		printf("Objective index is %d\n",objInd);
 	}
 	
@@ -247,13 +284,12 @@ int main (int argc, char **argv){
 	maxFlux = (double*)calloc(n, sizeof(double));
 	globalminFlux = (double*)calloc(n, sizeof(double));
 	globalmaxFlux = (double*)calloc(n, sizeof(double));
-
     
 	/*Disable dynamic teams*/
 	omp_set_dynamic(0); 
 	
 	/* FVA */
-	fva(lp, robjval, n, scaling, objInd, minFlux, maxFlux, rank, numprocs);
+	fva(lp, robjval, n, scaling, minFlux, maxFlux, rank, numprocs, rxns);
 	
 	/*Reduce results*/
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -270,18 +306,18 @@ int main (int argc, char **argv){
 	}*/
 	
 	/*Save to csv file*/
-	for(i=strlen(modelName)-4;i<strlen(modelName);i++){
-		modelName[i]=0;
-	}
-	strcat(modelName, fileName);
-	fp=fopen(modelName,"w+");
-	fprintf(fp,"minFlux,maxFlux\n");
-	if(rank==0){
+        if(rank==0){
+            for(i=strlen(modelName)-4;i<strlen(modelName);i++){
+	  	    modelName[i]=0;
+	    }
+	    strcat(modelName, fileName);
+            fp=fopen(modelName,"w+");
+	    fprintf(fp,"minFlux,maxFlux\n");
 		for(i=0;i<n;i++){
 			fprintf(fp,"%f,%f\n",globalminFlux[i],globalmaxFlux[i]);
 		}
+            fclose(fp);
 	}
-	fclose(fp);
 	
 	/*Finalize*/
 	clock_gettime(CLOCK_REALTIME, &now);
