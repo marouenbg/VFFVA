@@ -48,6 +48,9 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
     minFlux = results.minFlux
     maxFlux = results.maxFlux
 
+    # remove result file
+    os.system('rm '+resultFile)
+
     return minFlux,maxFlux
 
 def test_VFFVA():

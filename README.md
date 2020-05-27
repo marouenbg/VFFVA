@@ -10,7 +10,7 @@ This repository provides the code and result figures with the paper:
 Contact: [Marouen Ben Guebila](mailto:marouen.b.guebila@gmail.com)
 
 ### Usage
-The supported languages are: C (veryfastFVA.c) and MATLAB (VFFVA.m)
+The supported languages are: C (veryfastFVA.c) with wrappers in  MATLAB (VFFVA.m) and Python (VFFVA.py)
 
 Please refer to the [documentation](https://vffva.readthedocs.io/en/latest/) and the [UserGuide](UserGuide.md) for veryfastFVA (VFFVA) usage.
 
