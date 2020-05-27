@@ -37,7 +37,7 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double 
 	int i,j,tid,nthreads,solstat;
 	
 	/*optimisation loop Max:j=-1 Min:j=+1*/
-	#pragma omp parallel private(tid,i,j,solstat,status,objval) shared(minFlux,maxFlux,rxns)
+	#pragma omp parallel private(tid,i,j,solstat,status,objval) shared(minFlux,maxFlux)
 		{
 			int iters = 0;
 			double wTime = omp_get_wtime();
@@ -75,10 +75,10 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double 
 					solstat = (double)CPXgetstat(env, lpi);
 					//save results
 					if(j==-1){//save results
-						maxFlux[rxns[i]]   =objval;
+						maxFlux[i]   =objval;
 						//maxsolStat[i]=solstat;
 					}else{
-						minFlux[rxns[i]]   =objval;
+						minFlux[i]   =objval;
 						//minsolStat[i]=solstat;
 					}
 					status = CPXchgobj (env, lpi, cnt, &rxns[i], &zero);//set obj index to zero for next optim
@@ -98,11 +98,11 @@ int main (int argc, char **argv){
 	double *lb       = NULL;
 	double *ub       = NULL;
 	double objval, robjval, zero=0;
-	int    solstat;
+	int    solstat,nAll;
 	int cnt=1;
 	CPXENVptr     env = NULL;//CPLEX environment
 	CPXLPptr      lp = NULL;//LP problem
-	int           curpreind,i, j,m,n,scaling=0;
+	int           curpreind,i,j,m,n,scaling=0;
 	const double tol = 1.0e-6;//tolerance for the optimisation problem
 	double optPerc = 0.9, *obj;
 	int objInd;
@@ -124,10 +124,10 @@ int main (int argc, char **argv){
 	
 	/*Check arg number*/
 	if (rank==0){
-		if(( argc == 2 ) | ( argc == 3 ) | (argc == 4)){
+		if(( argc == 2 ) | ( argc == 3 ) | (argc == 4) | (argc == 5)){
 			printf("\nThe model supplied is %s\n", argv[1]);
 			strcpy(modelName,argv[1]);
-		}else if( argc > 4) {
+		}else if( argc > 5) {
 			printf("Too many arguments supplied.\n");
 			goto TERMINATE;
 		}else {
@@ -208,25 +208,39 @@ int main (int argc, char **argv){
 	
 	/*Problem size */
 	m = CPXgetnumrows (env, lp);
-	
-        /*Rxns to optimize */
-        if ( argc==5 ) {
-            FILE *fpp;
-            fpp = fopen(argv[5], "r");
-            if (fp == NULL) {
-                fprintf(stderr, "Error reading file\n");
-                return 1;
-            }
-            while (fscanf(fp, " %d", &rxns[n]) == 1) {
-                n++;
-            }
-            for (size_t i = 0; i < n; i++) {
-                printf("%d\n", rxns[i]);
-            }
+	nAll = CPXgetnumcols (env, lp);
 
-            fclose(fpp);
+        /*Rxns to optimize */
+        if ( argc==5 ){
+            if (rank == 0) {
+                rxns = (int*)calloc(nAll, sizeof(int));//realloc this
+                FILE *fpp;
+                fpp = fopen(argv[4], "r");
+                if (fpp == NULL) {
+                    fprintf(stderr, "Error reading file\n");
+                     return 1;
+                 }
+                 char buf[1024];//realloc this
+                 n = 0;
+                 while (fgets(buf, 1024, fpp)) {
+
+                     char *field = strtok(buf, ",");
+                     while (field) {
+
+                        printf("%s\n", field);
+                        rxns[n] = atoi(field);
+                        field   = strtok(NULL, ",");
+
+                        n++;
+                    }
+                }
+	        fclose(fpp);
+            }
+            /*Send to all processes */
+            MPI_Barrier(MPI_COMM_WORLD);
+            MPI_Bcast(rxns, nAll, MPI_INT, 0, MPI_COMM_WORLD);
         }else{
-            n = CPXgetnumcols (env, lp);
+            n = nAll;
             rxns = (int*)calloc(n, sizeof(int));
             for (int i=0; i < n; i++){
                rxns[i]=i;
@@ -243,9 +257,9 @@ int main (int argc, char **argv){
 	robjval = floor(objval/tol)*tol*optPerc;//because max
 	
 	/*Look for the index of the objective*/
-	obj =(double*)calloc(n, sizeof(double));
-	status = CPXgetobj (env, lp, obj, 0, n-1);
-	for(i=0;i<n;i++){
+	obj =(double*)calloc(nAll, sizeof(double));
+	status = CPXgetobj (env, lp, obj, 0, nAll-1);
+	for(i=0;i<nAll;i++){
 		if(obj[i]){
 			objInd=i;
 		}		
@@ -256,7 +270,7 @@ int main (int argc, char **argv){
 		printf ("Solution value  = %f\n", objval);
 		printf ("Solution status = %d\n", solstat);
 		printf("Rounded solution at %.f%%  is %f\n",optPerc*100,robjval);
-		printf ("Solving %d reations !\n", n);
+		printf ("Solving %d reactions !\n", n);
 		printf("Objective index is %d\n",objInd);
 	}
 	
