@@ -8,7 +8,7 @@ After installing the dependencies of `VFFVA`, you can build the binaries at the 
 
 Then call `VFFVA` as follows:
 
-`mpirun -np nCores --bind-to none -x OMP_NUM_THREADS=nThreads veryfastFVA model.mps OPTPERC SCAIND`
+`mpirun -np nCores --bind-to none -x OMP_NUM_THREADS=nThreads veryfastFVA model.mps OPTPERC SCAIND ex`
 
 Replace the following variables with your own parameters:
 
@@ -18,13 +18,13 @@ Replace the following variables with your own parameters:
 
 + model.mps: the metabolic model in `.mps` format. To convert a model in `.mat` format to `.mps`, you can use the provided converter `convertProblem.m`
 
-+ OPTPERC: Optimization percentage of the objective value (0-100). The default is 90, where VFFVa will be computed with the objective value set to 90% of the optimal
++ OPTPERC: Optimization percentage of the objective value (0-100). The default is 90, where VFFVA will be computed with the objective value set to 90% of the optimal
 objective.
 
-+ SCAIND: (optional) corresponds to the scaling CPLEX parameter SCAIND and can take the values 0 (equilibration scaling: default), 1(aggressive scaling), -1 (no scaling).
++ SCAIND: (optional) corresponds to the scaling CPLEX parameter SCAIND and can take the values 0 (equilibration scaling: default), 1 (aggressive scaling), -1 (no scaling).
 scaling is usually desactivated with tightly constrained metabolic model such as coupled models to avoid numerical instabilities and large solution times.
 
-+ ex: .csv file containing indices of reactions to optimize.
++ ex: .csv file containing indices of reactions to optimize e.g., 1,2,3,4,5 or check `rxns.csv` in the repository.
 
 Example: `mpirun -np 2 --bind-to none -x OMP_NUM_THREADS=4 veryfastFVA ecoli_core.mps`
 
