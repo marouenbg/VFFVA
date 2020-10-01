@@ -5,7 +5,7 @@
 
 This repository provides the code and result figures with the paper:
 
-[Dynamic load balancing enables large-scale flux variability analysis.](https://www.biorxiv.org/content/early/2018/10/11/440701)
+[VFFVA: dynamic load balancing enables large-scale flux variability analysis.](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-03711-2)
 
 Contact: [Marouen Ben Guebila](mailto:marouen.b.guebila@gmail.com)
 
