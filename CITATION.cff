@@ -7,3 +7,6 @@ authors:
 title: "VFFVA: dynamic load balancing enables large-scale flux variability analysis"
 doi: 10.1186/s12859-020-03711-2
 url: https://github.com/marouenbg/VFFVA
+version: 0.3
+doi: 10.5281/zenodo.1234
+date-released: 2020-05-27
