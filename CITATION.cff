@@ -1,29 +1,10 @@
-# YAML 1.2
----
-abstract: |
-    "Abstract
-    Background: Genome-scale metabolic models are increasingly employed to predict
-    the phenotype of various biological systems pertaining to healthcare and
-    bioengineering. To characterize the full metabolic spectrum of such systems, Fast Flux
-    Variability Analysis (FFVA) is commonly used in parallel with static load balancing. This
-    approach assigns to each core an equal number of biochemical reactions without
-    consideration of their solution complexity.
-    Results: Here, we present Very Fast Flux Variability Analysis (VFFVA) as a parallel
-    implementation that dynamically balances the computation load between the cores in
-    runtime which guarantees equal convergence time between them. VFFVA allowed to
-    gain a threefold speedup factor with coupled models and up to 100 with
-    ill-conditioned models along with a 14-fold decrease in memory usage.
-    Conclusions: VFFVA exploits the parallel capabilities of modern machines to enable
-    biological insights through optimizing systems biology modeling. VFF"
+cff-version: 1.2.0
 authors: 
-  -
-    affiliation: "Harvard T.H. Chan School of Public Health"
+  - affiliation: "Harvard T.H. Chan School of Public Health"
     family-names: "Ben Guebila"
     given-names: "Marouen"
     orcid: "https://orcid.org/0000-0001-5934-966X"
-cff-version: "1.1.0"
-doi: "10.1186/s12859-020-03711-2"
+doi: 10.1186/s12859-020-03711-2
 message: "If you use this software, please cite it using these metadata."
-repository-code: "https://github.com/marouenbg/VFFVA"
+url: "https://github.com/marouenbg/VFFVA"
 title: "VFFVA: dynamic load balancing enables large-scale flux variability analysis."
-...
