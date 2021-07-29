@@ -1,10 +1,9 @@
 cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
 authors:
-  - affiliation: "Harvard T.H. Chan School of Public Health"
-    family-names: "Ben Guebila"
-    given-names: "Marouen"
-    orcid: "https://orcid.org/0000-0001-5934-966X"
+- family-names: "Ben Guebila"
+  given-names: "Marouen"
+  orcid: "https://orcid.org/0000-0001-5934-966X"
+title: "VFFVA: dynamic load balancing enables large-scale flux variability analysis"
 doi: 10.1186/s12859-020-03711-2
-message: "If you use this software, please cite it using these metadata."
 url: "https://github.com/marouenbg/VFFVA"
-title: "VFFVA: dynamic load balancing enables large-scale flux variability analysis."
