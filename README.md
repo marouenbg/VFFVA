@@ -10,7 +10,7 @@ This repository provides the code and result figures with the paper:
 Contact: [Marouen Ben Guebila](mailto:marouen.b.guebila@gmail.com)
 
 ### Usage
-The supported languages are: C (veryfastFVA.c) with wrappers in  MATLAB (VFFVA.m) and Python (VFFVA.py)
+The supported languages are: C (veryfastFVA.c) with wrappers in  MATLAB (VFFVA.m) and Python (VFFVA.py). IBM CPLEX has stopped its support for MATLAB since version 12.10, therefore VFFVA can be an alternative to access new CPLEX versions through its C API.
 
 Please refer to the [documentation](https://vffva.readthedocs.io/en/latest/) and the [UserGuide](UserGuide.md) for veryfastFVA (VFFVA) usage.
 
@@ -18,13 +18,11 @@ In MATLAB, add the project folder to your MATLAB path and save it, then use `VFF
 
 For the comparison with fastFVA (FFVA), you can install FFVA [here](http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva).
 
-### Quick installation
-This is a standard installation recipe, if this does not work, please install each dependency separately as specified in the [documentation](https://vffva.readthedocs.io/en/latest/).
-```
-cd lib     
-source ./install.sh
-make
-```
+### Installation
+Please install each of the 3 dependencies separately as specified in the [documentation](https://vffva.readthedocs.io/en/latest/).
+- IBM ILOG CPLEX [free academic version](https://www.ibm.com/products/ilog-cplex-optimization-studio)
+- [MPI](www.open-mpi.org)
+- OpenMP is installed by default on most platforms except recent MacOS versions that require a dedicated installation. 
 
 ### Motivation
 FVA³ is the workhorse of metabolic modeling. It allows to characterize the boundaries of the solution space of a metabolic model and delineates the bounds

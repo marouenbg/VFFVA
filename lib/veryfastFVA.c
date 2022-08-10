@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------
  * File: veryfastFVA.c
- * Version 1.0
+ * Version 0.4
  * --------------------------------------------------------------------------
  * Licence CC BY 4.0 : Free to share and modify 
  * Author : Marouen BEN GUEBILA - marouen.benguebila@uni.lu

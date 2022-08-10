@@ -1,7 +1,8 @@
 function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex)
 % performs Very Fast Flux Variability Analysis (VFFVA). VFFVA is a parallel implementation of FVA that
 % allows dynamically assigning reactions to each worker depending on their computational load
-% Guebila, Marouen Ben. "Dynamic load balancing enables large-scale flux variability analysis." bioRxiv (2018): 440701.
+% Ben Guebila, Marouen. "Dynamic load balancing enables large-scale flux
+% variability analysis." BMC Bioinformatics (2020). DOI: 10.1186/s12859-020-03711-2.
 % 
 % USAGE:
 %
@@ -26,7 +27,7 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 %                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
 %    nChunk:           Number of reactions in each chunk (Default = 50). This is an OpenMP parameter, more
 %                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
-%    ex:               Indices of reactions to optimize. (Default, all reactions)
+%    ex:               0-based indices of reactions to optimize. (Default, all reactions)
 %
 % OUTPUTS:
 %    minFlux:          (n,1) vector of minimal flux values for each reaction.
@@ -57,6 +58,7 @@ end
 
 % set reactions to optimize
 if ~isempty(ex)
+    fprintf('Please make sure that reaction indices are 0-based.\n')
     writematrix(ex,'rxns.csv');
     ex='rxns.csv';
 end
@@ -75,9 +77,9 @@ end
 if ~ischar(model)
 	%Convert .mat problem to .mps
 	%Determine if model is coupled
-	if isfield(model,'A')
+	if isfield(model,'A') || isfield(model,'C') 
 		coupled=1;
-	    %If mode is coupled, schedule should be set to -1
+	    %If model is coupled, schedule should be set to -1
 	else
 		coupled=0;
     end
