@@ -25,7 +25,7 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
     :param optPerc:  Percentage of the optimal objective used in FVA. Integer between 0 and 100. For example, when set to 90
                      FVA will be computed on 90% of the optimal objective.
-    :param ex:       Indices of reactions to optimize as a numpy array.  (Default, all reactions)
+    :param ex:      0-based indices of reactions to optimize as a numpy array.  (Default, all reactions)
     :return:
            minFlux:          (n,1) vector of minimal flux values for each reaction.
            maxFlux:          (n,1) vector of maximal flux values for each reaction.

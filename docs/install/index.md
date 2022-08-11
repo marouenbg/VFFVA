@@ -50,7 +50,7 @@ export PATH=$HOME/open-mpi/bin:$PATH
 ```
 + IBM CPLEX: The recommended approach is to download [IBM CPLEX](http://www.ibm.com/academic) and register for the free academic version.
 
-Here is a code snippet for installing CPLEX for Ubunutu, this is only an example and you need to get your installation file after creating an IBMid.
+Here is a code snippet for installing CPLEX for Ubuntu, this is only an example and you need to get your installation file after creating an IBMid.
 In this example, CPLEX will be installed in ~/CPLEX_Studio1210.
 
 ```
