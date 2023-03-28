@@ -114,7 +114,7 @@ int main (int argc, char **argv){
 	FILE *fp;
 	char fileName[100] = "output.csv";
 	char modelName[100];
-        int *rxns;
+    int *rxns;
 	
 	/*Initialize MPI*/
 	MPI_Init(&argc, &argv);
@@ -209,35 +209,33 @@ int main (int argc, char **argv){
 	/*Problem size */
 	m = CPXgetnumrows (env, lp);
 	nAll = CPXgetnumcols (env, lp);
-
         /*Rxns to optimize */
         if ( argc==5 ){
             rxns = (int*)calloc(nAll, sizeof(int));//realloc this
             int readFile=1;
             if ( readFile==1 ) {
                 FILE *fpp;
-                fpp = fopen(argv[4], "r");
-                if (fpp == NULL) {
-                    fprintf(stderr, "Error reading file\n");
-                     return 1;
-                 }
-                 char buf[2048];//realloc this
-                 n = 0;
-                 while (fgets(buf, 1024, fpp)) {
-
-                     char *field = strtok(buf, ",");
-                     while (field) {
-
-                        //printf("%s\n", field);
-                        rxns[n] = atoi(field);
-                        field   = strtok(NULL, ",");
-
-                        n++;
-                    }
-                }
-	        fclose(fpp);
+				int num, count = 0;
+				
+				fpp = fopen(argv[4], "r");
+				if (fpp == NULL) {
+					printf("Error opening file.\n");
+					return 1;
+				}
+				while (fscanf(fpp, "%d", &num) == 1) {
+					count++;
+				}
+			
+				rxns = (int *) malloc(count * sizeof(int));
+				fseek(fpp, 0, SEEK_SET);
+				
+				for (int i = 0; i < count; i++) {
+					fscanf(fpp, "%d", &rxns[i]);
+				}
+				n = count;
+				
+				fclose(fpp);
             }
-            rxns = (int *) realloc(rxns, n*sizeof(int));
         }else{
             n = nAll;
             rxns = (int*)calloc(n, sizeof(int));
