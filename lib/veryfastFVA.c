@@ -45,7 +45,7 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double 
 			if(tid==0){
 				nthreads=omp_get_num_threads();
 				if(rank==0){
-					printf("Number of threads = %d, Number of CPUs = %d\n\n",nthreads,numprocs);
+					printf("\nNumber of threads = %d, Number of CPUs = %d\n\n",nthreads,numprocs);
 				}
 			}
 			CPXENVptr     env = NULL;
@@ -266,13 +266,20 @@ int main (int argc, char **argv){
 	if(rank==0){
 		printf ("Solution value  = %f\n", objval);
 		printf ("Solution status = %d\n", solstat);
-		printf("Rounded solution at %.f%%  is %f\n",optPerc*100,robjval);
 		printf ("Solving %d reactions !\n", n);
 		printf("Objective index is %d\n",objInd);
+		
+		if (optPerc*100 != -1) {
+			printf("\nRunning biased FVA- setting lower bound of objective to %.f%% of optimal value!\n",optPerc*100);
+			printf("Rounded solution at %.f%% is %f\n",optPerc*100,robjval);
+		} else {
+			printf("\nRunning regular FVA- keeping objective bounds as found in model!");
+		}
 	}
-	
-	/*Set the lower bound of objective to its max value (biased FVA)*/
-	status = CPXchgbds (env, lp, cnt, &objInd, &low, &robjval);
+
+	if (optPerc*100 != -1) {
+		status = CPXchgbds (env, lp, cnt, &objInd, &low, &robjval);
+	}
 	
 	/*Set the objective coefficient to zero*/
 	status = CPXchgobj (env, lp, cnt, &objInd, &zero);
