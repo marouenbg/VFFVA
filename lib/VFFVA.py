@@ -41,10 +41,10 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
 
     # Set reactions to optimize
     if ex!=[]:
-        with open('rxns.csv', 'w', newline='') as myfile:
-            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-            wr.writerow(ex)
-        ex='rxns.csv'
+        with open('rxns.txt', 'w') as myfile:
+            for num in ex:
+                myfile.write(str(num) + "\n")   
+        ex='rxns.txt'
     else:
         ex=''
 
