@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-glpk:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mpi-procs: [1]
+        omp-threads: [2]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libglpk-dev libopenmpi-dev openmpi-bin
+
+      - name: Build with GLPK
+        working-directory: lib
+        run: |
+          make SOLVER=glpk \
+               GLPKINCDIR=/usr/include \
+               GLPKLIBDIR=/usr/lib/x86_64-linux-gnu
+
+      - name: Run VFFVA on E. coli core model
+        working-directory: lib
+        run: |
+          export OMP_SCHEDULE="dynamic,50"
+          mpirun -np ${{ matrix.mpi-procs }} \
+                 --bind-to none \
+                 --oversubscribe \
+                 -x OMP_NUM_THREADS=${{ matrix.omp-threads }} \
+                 ./veryfastFVA ../data/models/Ecoli_core/Ecoli_core.mps 90
+
+      - name: Validate output
+        working-directory: lib
+        run: |
+          OUTPUT="../data/models/Ecoli_core/Ecoli_coreoutput.csv"
+          if [ ! -f "$OUTPUT" ]; then
+            echo "ERROR: Output file not found"
+            exit 1
+          fi
+          # Check header
+          HEAD=$(head -1 "$OUTPUT")
+          if [ "$HEAD" != "minFlux,maxFlux" ]; then
+            echo "ERROR: Unexpected header: $HEAD"
+            exit 1
+          fi
+          # E. coli core has 95 reactions → 95 data lines + 1 header = 96
+          LINES=$(wc -l < "$OUTPUT")
+          if [ "$LINES" -ne 96 ]; then
+            echo "ERROR: Expected 96 lines, got $LINES"
+            exit 1
+          fi
+          echo "Output validated: 95 reactions, header OK"
+
+      - name: Run with reaction subset
+        working-directory: lib
+        run: |
+          echo -e "0\n5\n10\n20\n50" > /tmp/test_rxns.csv
+          export OMP_SCHEDULE="dynamic,50"
+          mpirun -np ${{ matrix.mpi-procs }} \
+                 --bind-to none \
+                 --oversubscribe \
+                 -x OMP_NUM_THREADS=${{ matrix.omp-threads }} \
+                 ./veryfastFVA ../data/models/Ecoli_core/Ecoli_core.mps 90 0 /tmp/test_rxns.csv
+          OUTPUT="../data/models/Ecoli_core/Ecoli_coreoutput.csv"
+          LINES=$(wc -l < "$OUTPUT")
+          if [ "$LINES" -ne 6 ]; then
+            echo "ERROR: Expected 6 lines (5 rxns + header), got $LINES"
+            exit 1
+          fi
+          echo "Subset test passed: 5 reactions"

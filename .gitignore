@@ -24,6 +24,9 @@
 *.csv
 *.mps
 *.o
+lib/veryfastFVA
+.venv*/
+*.code-workspace
 *.aux
 *.bbl
 *.blg

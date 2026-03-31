@@ -1,6 +1,5 @@
 [![DOI](https://zenodo.org/badge/142482470.svg)](https://zenodo.org/badge/latestdoi/142482470)
-[![TRAVIS](https://travis-ci.com/marouenbg/VFFVA.svg?branch=master)](https://travis-ci.com/marouenbg/VFFVA)
-[![codecov](https://codecov.io/gh/marouenbg/VFFVA/branch/master/graph/badge.svg)](https://codecov.io/gh/marouenbg/VFFVA)
+[![CI](https://github.com/marouenbg/VFFVA/actions/workflows/ci.yml/badge.svg)](https://github.com/marouenbg/VFFVA/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/marouenbg/ACHR.cu/blob/master/LICENSE.txt)
 
 This repository provides the code and result figures with the paper:
@@ -10,19 +9,35 @@ This repository provides the code and result figures with the paper:
 Contact: [Marouen Ben Guebila](mailto:marouen.b.guebila@gmail.com)
 
 ### Usage
-The supported languages are: C (veryfastFVA.c) with wrappers in  MATLAB (VFFVA.m) and Python (VFFVA.py). IBM CPLEX has stopped its support for MATLAB since version 12.10, therefore VFFVA can be an alternative to access new CPLEX versions through its C API.
+The supported languages are: C (veryfastFVA.c) with wrappers in  MATLAB (VFFVA.m) and Python (VFFVA.py).
+
+VFFVA supports two LP solver backends:
+- **IBM CPLEX** (default) — high-performance commercial solver ([free academic version](https://www.ibm.com/products/ilog-cplex-optimization-studio))
+- **GLPK** — free open-source solver ([glpk](https://www.gnu.org/software/glpk/))
 
 Please refer to the [documentation](https://vffva.readthedocs.io/en/latest/) and the [UserGuide](UserGuide.md) for veryfastFVA (VFFVA) usage.
 
-In MATLAB, add the project folder to your MATLAB path and save it, then use `VFFVA()`. In Python, `import VFFA` to use `VFFVA()`.
+In MATLAB, add the project folder to your MATLAB path and save it, then use `VFFVA()`. In Python, `import VFFVA` to use `VFFVA()`.
 
 For the comparison with fastFVA (FFVA), you can install FFVA [here](http://wwwen.uni.lu/lcsb/research/mol_systems_physiology/fastfva).
 
 ### Installation
 Please install each of the 3 dependencies separately as specified in the [documentation](https://vffva.readthedocs.io/en/latest/).
-- IBM ILOG CPLEX [free academic version](https://www.ibm.com/products/ilog-cplex-optimization-studio)
+- **LP Solver**: either IBM ILOG CPLEX or GLPK (`sudo apt-get install libglpk-dev` on Ubuntu, `brew install glpk` on macOS)
 - [MPI](www.open-mpi.org)
-- OpenMP is installed by default on most platforms except recent MacOS versions that require a dedicated installation. 
+- OpenMP is installed by default on most platforms except recent MacOS versions that require a dedicated installation.
+
+#### Building with CPLEX (default)
+```bash
+cd lib
+make CPLEXDIR=/path/to/cplex
+```
+
+#### Building with GLPK
+```bash
+cd lib
+make SOLVER=glpk
+```
 
 ### Motivation
 FVA³ is the workhorse of metabolic modeling. It allows to characterize the boundaries of the solution space of a metabolic model and delineates the bounds

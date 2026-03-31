@@ -1,15 +1,15 @@
 import os
 import pandas as pd
-import csv
 
-def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic', nChunk=50, optPerc=90, ex=[]):
+def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic', nChunk=50, optPerc=90, ex=None, solver='cplex'):
     '''
     VFFVA performs Very Fast Flux Variability Analysis (VFFVA). VFFVA is a parallel implementation of FVA that
     allows dynamically assigning reactions to each worker depending on their computational load
-    Guebila, Marouen Ben. "Dynamic load balancing enables large-scale flux variability analysis." bioRxiv (2018): 440701.
+    Ben Guebila, Marouen. "Dynamic load balancing enables large-scale flux variability analysis."
+    BMC Bioinformatics (2020). DOI: 10.1186/s12859-020-03711-2.
 
     USAGE:
-    minFlux,maxFlux=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex)
+    minFlux,maxFlux=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex, solver)
 
     :param nCores:   Number of non-shared memory cores/machines.
     :param nThreads: Number of shared memory threads in each core/machine.
@@ -26,32 +26,39 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
     :param optPerc:  Percentage of the optimal objective used in FVA. Integer between 0 and 100. For example, when set to 90
                      FVA will be computed on 90% of the optimal objective.
     :param ex:      0-based indices of reactions to optimize as a numpy array.  (Default, all reactions)
+    :param solver:  'cplex' or 'glpk'. (Default = 'cplex'). The binary must be compiled with the
+                     corresponding solver. Use 'make SOLVER=glpk' to build the GLPK version.
     :return:
            minFlux:          (n,1) vector of minimal flux values for each reaction.
            maxFlux:          (n,1) vector of maximal flux values for each reaction.
     '''
 
+    if ex is None:
+        ex = []
+
     status = os.system('mpirun --version')
     if status != 0:
-        raise ValueError(['MPI and/or CPLEX nont installed, please follow the install guide'
-               'or use the quick install script'])
+        raise ValueError('MPI not installed, please follow the install guide '
+                         'or use the quick install script')
+
+    # Select the correct binary
+    binary = './veryfastFVA'
 
     # Set schedule and chunk size parameters
-    os.environ["OMP_SCHEDUELE"] = schedule+str(nChunk)
+    os.environ["OMP_SCHEDULE"] = schedule + ',' + str(nChunk)
 
     # Set reactions to optimize
-    if ex!=[]:
+    rxnsFile = ''
+    if ex:
         with open('rxns.txt', 'w') as myfile:
             for num in ex:
-                myfile.write(str(num) + "\n")   
-        ex='rxns.txt'
-    else:
-        ex=''
+                myfile.write(str(num) + "\n")
+        rxnsFile = 'rxns.txt'
 
     # Call VFFVA
     status = os.system(
         'mpirun -np ' + str(nCores) + ' --bind-to ' + str(memAff) + ' -x OMP_NUM_THREADS=' + str(nThreads) +
-         ' ./veryfastFVA ' + model + ' ' + str(optPerc) + ' ' + str(scaling) + ' ' + ex)
+         ' ' + binary + ' ' + model + ' ' + str(optPerc) + ' ' + str(scaling) + ' ' + rxnsFile)
 
     # Fetch results
     resultFile = model[:-4] + 'output.csv'
@@ -60,14 +67,15 @@ def VFFVA(nCores, nThreads, model, scaling=0, memAff='none', schedule='dynamic',
     maxFlux = results.maxFlux
 
     # remove result file
-    os.system('rm '+resultFile)
-    if ex!='':
-        os.system('rm '+ex)
+    os.remove(resultFile)
+    if rxnsFile:
+        os.remove(rxnsFile)
 
-    return minFlux,maxFlux
+    return minFlux, maxFlux
 
 def test_VFFVA():
-    minFlux,maxFlux=VFFVA(2, 2, '../data/models/Ecoli_core/Ecoli_core.mps',ex=[1,2,10,5,46])
+    minFlux, maxFlux = VFFVA(2, 2, '../data/models/Ecoli_core/Ecoli_core.mps', ex=[1, 2, 10, 5, 46])
     print(minFlux)
 
-test_VFFVA()
+if __name__ == '__main__':
+    test_VFFVA()
