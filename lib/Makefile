@@ -23,12 +23,8 @@ SOLVER ?= cplex
 #
 #------------------------------------------------------------
 
-ifndef TRAVIS
-	#Please define CPLEX path here
-	CPLEXDIR      = $(HOME)/Applications/CPLEX_Studio2212/cplex
-else
-	CPLEXDIR       = /home/travis/travis/cplex
-endif
+#Please define CPLEX path here
+CPLEXDIR      ?= $(HOME)/Applications/CPLEX_Studio2212/cplex
 
 # GLPK paths (override as needed)
 ifeq ($(UNAME_S),Darwin)
@@ -43,14 +39,10 @@ endif
 # Compiler selection 
 # ---------------------------------------------------------------------
 
-ifndef TRAVIS
-  ifeq ($(UNAME_S),Darwin)
+ifeq ($(UNAME_S),Darwin)
 	CC  = mpicc -O3 -Xclang -fopenmp -I/opt/homebrew/opt/libomp/include -L/opt/homebrew/opt/libomp/lib -lomp
-  else
-	CC  = mpicc -O3 -fopenmp
-  endif
 else
-	CC  = mpicc -O3 -fopenmp -coverage
+	CC  = mpicc -O3 -fopenmp
 endif
 
 # ---------------------------------------------------------------------
