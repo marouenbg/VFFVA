@@ -60,6 +60,43 @@ jobs:
           fi
           echo "Output validated: 95 reactions, header OK"
 
+      - name: Compare against ground truth
+        run: |
+          python3 -c "
+          import csv, sys
+          tol = 1e-3
+          ref_file = 'data/models/Ecoli_core/reference_fva_90pct.csv'
+          out_file = 'data/models/Ecoli_core/Ecoli_coreoutput.csv'
+          with open(ref_file) as f:
+              ref = list(csv.reader(f))
+          with open(out_file) as f:
+              out = list(csv.reader(f))
+          # skip headers
+          ref = ref[1:]
+          out = out[1:]
+          if len(ref) != len(out):
+              print(f'Row count mismatch: ref={len(ref)}, out={len(out)}')
+              sys.exit(1)
+          max_diff_min = 0
+          max_diff_max = 0
+          errors = 0
+          for i, (r, o) in enumerate(zip(ref, out)):
+              rmin, rmax = float(r[0]), float(r[1])
+              omin, omax = float(o[0]), float(o[1])
+              dmin = abs(rmin - omin)
+              dmax = abs(rmax - omax)
+              max_diff_min = max(max_diff_min, dmin)
+              max_diff_max = max(max_diff_max, dmax)
+              if dmin > tol or dmax > tol:
+                  print(f'  rxn {i}: ref=[{rmin:.6f},{rmax:.6f}] got=[{omin:.6f},{omax:.6f}] diff=[{dmin:.2e},{dmax:.2e}]')
+                  errors += 1
+          print(f'Max diff: minFlux={max_diff_min:.6e}, maxFlux={max_diff_max:.6e}')
+          if errors:
+              print(f'FAIL: {errors} reactions exceed tolerance {tol}')
+              sys.exit(1)
+          print(f'PASS: all {len(ref)} reactions within tolerance {tol}')
+          "
+
       - name: Run with reaction subset
         working-directory: lib
         run: |

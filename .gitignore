@@ -22,6 +22,7 @@
 *.asv
 *.h5
 *.csv
+!data/models/Ecoli_core/reference_fva_90pct.csv
 *.mps
 *.o
 lib/veryfastFVA
