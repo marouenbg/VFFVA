@@ -37,19 +37,9 @@ jobs:
             data/models/Ecoli_core/ecoli_core_model.mat \
             data/models/Ecoli_core/Ecoli_core.mps \
             --name Ecoli_co
-          python3 -c "
-          import cobra, warnings, csv
-          warnings.filterwarnings('ignore')
-          m = cobra.io.load_matlab_model('data/models/Ecoli_core/ecoli_core_model.mat')
-          fva = cobra.flux_analysis.flux_variability_analysis(m, fraction_of_optimum=0.9, processes=1)
-          fva = fva.loc[[r.id for r in m.reactions]]
-          with open('data/models/Ecoli_core/reference_fva.csv', 'w', newline='') as f:
-              w = csv.writer(f)
-              w.writerow(['minFlux', 'maxFlux'])
-              for _, row in fva.iterrows():
-                  w.writerow([f'{row[\"minimum\"]:.6f}', f'{row[\"maximum\"]:.6f}'])
-          print(f'Generated reference: {len(fva)} reactions')
-          "
+          python3 lib/generate_reference.py \
+            data/models/Ecoli_core/ecoli_core_model.mat \
+            data/models/Ecoli_core/reference_fva.csv
 
       - name: Generate E. coli K12 ground truth
         run: |
@@ -57,19 +47,9 @@ jobs:
             data/models/Ecoli_K12/iAF1260.mat \
             data/models/Ecoli_K12/Ecoli_K12.mps \
             --name Ecoli_K1
-          python3 -c "
-          import cobra, warnings, csv
-          warnings.filterwarnings('ignore')
-          m = cobra.io.load_matlab_model('data/models/Ecoli_K12/iAF1260.mat')
-          fva = cobra.flux_analysis.flux_variability_analysis(m, fraction_of_optimum=0.9, processes=1)
-          fva = fva.loc[[r.id for r in m.reactions]]
-          with open('data/models/Ecoli_K12/reference_fva.csv', 'w', newline='') as f:
-              w = csv.writer(f)
-              w.writerow(['minFlux', 'maxFlux'])
-              for _, row in fva.iterrows():
-                  w.writerow([f'{row[\"minimum\"]:.6f}', f'{row[\"maximum\"]:.6f}'])
-          print(f'Generated reference: {len(fva)} reactions')
-          "
+          python3 lib/generate_reference.py \
+            data/models/Ecoli_K12/iAF1260.mat \
+            data/models/Ecoli_K12/reference_fva.csv
 
       # ── Run VFFVA and compare ──
 
