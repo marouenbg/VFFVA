@@ -20,6 +20,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libglpk-dev libopenmpi-dev openmpi-bin lcov
+          pip install cobra scipy
 
       - name: Build with GLPK
         working-directory: lib
@@ -28,7 +29,51 @@ jobs:
                GLPKINCDIR=/usr/include \
                GLPKLIBDIR=/usr/lib/x86_64-linux-gnu
 
-      - name: Run VFFVA on E. coli core model
+      # ── Generate MPS and cobrapy ground truth for each model ──
+
+      - name: Generate E. coli core ground truth
+        run: |
+          python3 lib/mat2mps.py \
+            data/models/Ecoli_core/ecoli_core_model.mat \
+            data/models/Ecoli_core/Ecoli_core.mps \
+            --name Ecoli_co
+          python3 -c "
+          import cobra, warnings, csv
+          warnings.filterwarnings('ignore')
+          m = cobra.io.load_matlab_model('data/models/Ecoli_core/ecoli_core_model.mat')
+          fva = cobra.flux_analysis.flux_variability_analysis(m, fraction_of_optimum=0.9, processes=1)
+          fva = fva.loc[[r.id for r in m.reactions]]
+          with open('data/models/Ecoli_core/reference_fva.csv', 'w', newline='') as f:
+              w = csv.writer(f)
+              w.writerow(['minFlux', 'maxFlux'])
+              for _, row in fva.iterrows():
+                  w.writerow([f'{row[\"minimum\"]:.6f}', f'{row[\"maximum\"]:.6f}'])
+          print(f'Generated reference: {len(fva)} reactions')
+          "
+
+      - name: Generate E. coli K12 ground truth
+        run: |
+          python3 lib/mat2mps.py \
+            data/models/Ecoli_K12/iAF1260.mat \
+            data/models/Ecoli_K12/Ecoli_K12.mps \
+            --name Ecoli_K1
+          python3 -c "
+          import cobra, warnings, csv
+          warnings.filterwarnings('ignore')
+          m = cobra.io.load_matlab_model('data/models/Ecoli_K12/iAF1260.mat')
+          fva = cobra.flux_analysis.flux_variability_analysis(m, fraction_of_optimum=0.9, processes=1)
+          fva = fva.loc[[r.id for r in m.reactions]]
+          with open('data/models/Ecoli_K12/reference_fva.csv', 'w', newline='') as f:
+              w = csv.writer(f)
+              w.writerow(['minFlux', 'maxFlux'])
+              for _, row in fva.iterrows():
+                  w.writerow([f'{row[\"minimum\"]:.6f}', f'{row[\"maximum\"]:.6f}'])
+          print(f'Generated reference: {len(fva)} reactions')
+          "
+
+      # ── Run VFFVA and compare ──
+
+      - name: Run VFFVA on E. coli core
         working-directory: lib
         run: |
           export OMP_SCHEDULE="dynamic,50"
@@ -38,63 +83,82 @@ jobs:
                  -x OMP_NUM_THREADS=${{ matrix.omp-threads }} \
                  ./veryfastFVA ../data/models/Ecoli_core/Ecoli_core.mps 90
 
-      - name: Validate output
-        working-directory: lib
+      - name: Validate E. coli core output
         run: |
-          OUTPUT="../data/models/Ecoli_core/Ecoli_coreoutput.csv"
-          if [ ! -f "$OUTPUT" ]; then
-            echo "ERROR: Output file not found"
-            exit 1
-          fi
-          # Check header
+          OUTPUT="data/models/Ecoli_core/Ecoli_coreoutput.csv"
           HEAD=$(head -1 "$OUTPUT")
-          if [ "$HEAD" != "minFlux,maxFlux" ]; then
-            echo "ERROR: Unexpected header: $HEAD"
-            exit 1
-          fi
-          # E. coli core has 95 reactions → 95 data lines + 1 header = 96
+          [ "$HEAD" = "minFlux,maxFlux" ] || { echo "Bad header: $HEAD"; exit 1; }
           LINES=$(wc -l < "$OUTPUT")
-          if [ "$LINES" -ne 96 ]; then
-            echo "ERROR: Expected 96 lines, got $LINES"
-            exit 1
-          fi
-          echo "Output validated: 95 reactions, header OK"
+          [ "$LINES" -eq 96 ] || { echo "Expected 96 lines, got $LINES"; exit 1; }
+          echo "E. coli core: 95 reactions OK"
 
-      - name: Compare against ground truth
+      - name: Compare E. coli core against cobrapy
         run: |
           python3 -c "
           import csv, sys
           tol = 1e-3
-          ref_file = 'data/models/Ecoli_core/reference_fva_90pct.csv'
-          out_file = 'data/models/Ecoli_core/Ecoli_coreoutput.csv'
-          with open(ref_file) as f:
-              ref = list(csv.reader(f))
-          with open(out_file) as f:
-              out = list(csv.reader(f))
-          # skip headers
-          ref = ref[1:]
-          out = out[1:]
+          with open('data/models/Ecoli_core/reference_fva.csv') as f:
+              ref = list(csv.reader(f))[1:]
+          with open('data/models/Ecoli_core/Ecoli_coreoutput.csv') as f:
+              out = list(csv.reader(f))[1:]
           if len(ref) != len(out):
               print(f'Row count mismatch: ref={len(ref)}, out={len(out)}')
               sys.exit(1)
-          max_diff_min = 0
-          max_diff_max = 0
           errors = 0
           for i, (r, o) in enumerate(zip(ref, out)):
-              rmin, rmax = float(r[0]), float(r[1])
-              omin, omax = float(o[0]), float(o[1])
-              dmin = abs(rmin - omin)
-              dmax = abs(rmax - omax)
-              max_diff_min = max(max_diff_min, dmin)
-              max_diff_max = max(max_diff_max, dmax)
+              dmin = abs(float(r[0]) - float(o[0]))
+              dmax = abs(float(r[1]) - float(o[1]))
               if dmin > tol or dmax > tol:
-                  print(f'  rxn {i}: ref=[{rmin:.6f},{rmax:.6f}] got=[{omin:.6f},{omax:.6f}] diff=[{dmin:.2e},{dmax:.2e}]')
+                  print(f'  rxn {i}: ref=[{r[0]},{r[1]}] got=[{o[0]},{o[1]}] diff=[{dmin:.2e},{dmax:.2e}]')
                   errors += 1
-          print(f'Max diff: minFlux={max_diff_min:.6e}, maxFlux={max_diff_max:.6e}')
           if errors:
-              print(f'FAIL: {errors} reactions exceed tolerance {tol}')
+              print(f'FAIL: {errors}/{len(ref)} reactions exceed tol {tol}')
               sys.exit(1)
-          print(f'PASS: all {len(ref)} reactions within tolerance {tol}')
+          print(f'PASS: E. coli core — all {len(ref)} reactions within tol {tol}')
+          "
+
+      - name: Run VFFVA on E. coli K12
+        working-directory: lib
+        run: |
+          export OMP_SCHEDULE="dynamic,50"
+          mpirun -np ${{ matrix.mpi-procs }} \
+                 --bind-to none \
+                 --oversubscribe \
+                 -x OMP_NUM_THREADS=${{ matrix.omp-threads }} \
+                 ./veryfastFVA ../data/models/Ecoli_K12/Ecoli_K12.mps 90
+
+      - name: Validate E. coli K12 output
+        run: |
+          OUTPUT="data/models/Ecoli_K12/Ecoli_K12output.csv"
+          HEAD=$(head -1 "$OUTPUT")
+          [ "$HEAD" = "minFlux,maxFlux" ] || { echo "Bad header: $HEAD"; exit 1; }
+          LINES=$(wc -l < "$OUTPUT")
+          [ "$LINES" -eq 2383 ] || { echo "Expected 2383 lines, got $LINES"; exit 1; }
+          echo "E. coli K12: 2382 reactions OK"
+
+      - name: Compare E. coli K12 against cobrapy
+        run: |
+          python3 -c "
+          import csv, sys
+          tol = 1e-3
+          with open('data/models/Ecoli_K12/reference_fva.csv') as f:
+              ref = list(csv.reader(f))[1:]
+          with open('data/models/Ecoli_K12/Ecoli_K12output.csv') as f:
+              out = list(csv.reader(f))[1:]
+          if len(ref) != len(out):
+              print(f'Row count mismatch: ref={len(ref)}, out={len(out)}')
+              sys.exit(1)
+          errors = 0
+          for i, (r, o) in enumerate(zip(ref, out)):
+              dmin = abs(float(r[0]) - float(o[0]))
+              dmax = abs(float(r[1]) - float(o[1]))
+              if dmin > tol or dmax > tol:
+                  print(f'  rxn {i}: ref=[{r[0]},{r[1]}] got=[{o[0]},{o[1]}] diff=[{dmin:.2e},{dmax:.2e}]')
+                  errors += 1
+          if errors:
+              print(f'FAIL: {errors}/{len(ref)} reactions exceed tol {tol}')
+              sys.exit(1)
+          print(f'PASS: E. coli K12 — all {len(ref)} reactions within tol {tol}')
           "
 
       - name: Run with reaction subset
@@ -109,10 +173,7 @@ jobs:
                  ./veryfastFVA ../data/models/Ecoli_core/Ecoli_core.mps 90 0 /tmp/test_rxns.csv
           OUTPUT="../data/models/Ecoli_core/Ecoli_coreoutput.csv"
           LINES=$(wc -l < "$OUTPUT")
-          if [ "$LINES" -ne 6 ]; then
-            echo "ERROR: Expected 6 lines (5 rxns + header), got $LINES"
-            exit 1
-          fi
+          [ "$LINES" -eq 6 ] || { echo "Expected 6 lines, got $LINES"; exit 1; }
           echo "Subset test passed: 5 reactions"
 
       - name: Collect coverage
@@ -123,7 +184,7 @@ jobs:
           lcov --list coverage.info
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: lib/coverage.info
           fail_ci_if_error: false
