@@ -1,4 +1,4 @@
-function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex)
+function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex, solver)
 % performs Very Fast Flux Variability Analysis (VFFVA). VFFVA is a parallel implementation of FVA that
 % allows dynamically assigning reactions to each worker depending on their computational load
 % Ben Guebila, Marouen. "Dynamic load balancing enables large-scale flux
@@ -6,7 +6,7 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 % 
 % USAGE:
 %
-%    [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc)
+%    [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex, solver)
 %
 % INPUT:
 %    nCores:           Number of non-shared memory cores/machines.
@@ -28,6 +28,8 @@ function [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, sched
 %    nChunk:           Number of reactions in each chunk (Default = 50). This is an OpenMP parameter, more
 %                      information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
 %    ex:               0-based indices of reactions to optimize. (Default, all reactions)
+%    solver:           'cplex' or 'glpk'. (Default = 'cplex'). The binary must be compiled with the
+%                      corresponding solver. Use 'make SOLVER=glpk' to build the GLPK version.
 %
 % OUTPUTS:
 %    minFlux:          (n,1) vector of minimal flux values for each reaction.
@@ -74,7 +76,8 @@ if status==127
 end
 
 %If model in COBRA format
-if ~ischar(model)
+modelIsStruct = ~ischar(model);
+if modelIsStruct
 	%Convert .mat problem to .mps
 	%Determine if model is coupled
 	if isfield(model,'A') || isfield(model,'C') 
@@ -88,7 +91,7 @@ if ~ischar(model)
 end
 
 %Set schedule and chunk size parameters
-setenv('OMP_SCHEDUELE', [schedule ',' num2str(nChunk)])
+setenv('OMP_SCHEDULE', [schedule ',' num2str(nChunk)])
 
 %Call VFFVA
 [status,cmdout]=system(['mpirun -np ' num2str(nCores) ' --bind-to ' num2str(memAff) ' -x OMP_NUM_THREADS=' num2str(nThreads)...
@@ -101,7 +104,7 @@ minFlux=results.minFlux; maxFlux=results.maxFlux;
 
 %remove result file
 delete(resultFile)
-if ~ischar(model)
+if modelIsStruct
     delete('myVFFVAmodel.mps')
 end
 if ~isempty(ex)

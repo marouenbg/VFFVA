@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------
  * File: veryfastFVA.c
- * Version 0.4
+ * Version 0.5.0
  * --------------------------------------------------------------------------
  * Licence CC BY 4.0 : Free to share and modify 
  * Author : Marouen BEN GUEBILA - marouen.benguebila@uni.lu
@@ -10,14 +10,22 @@
    Usage
       veryfastFVA <datafile>   
       <datafile> : .mps file containing LP problem
+   Solver backends: CPLEX (default) or GLPK (compile with -DUSE_GLPK)
  */
 /*open mp declaration*/
 #include <omp.h>
 #include "mpi.h"
- 
+
+#ifdef USE_GLPK
+/* GLPK declaration */
+#include <glpk.h>
+#else
 /* ILOG Cplex declaration*/
 #include <ilcplex/cplex.h>
-/* Bring in the declarations for the string functions */
+#endif
+
+/* Bring in the declarations for the string and I/O functions */
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -26,7 +34,60 @@
 static void
    free_and_null     (char **ptr),
    usage             (char *progname);
-   
+
+#ifdef USE_GLPK
+
+void fva(glp_prob *lp, double objval, int n, int scaling, double *minFlux, double *maxFlux, int rank, int numprocs, int *rxns){
+	int i,j,tid,nthreads;
+	
+	/*optimisation loop Max:j=-1(GLP_MAX) Min:j=+1(GLP_MIN)*/
+	#pragma omp parallel private(tid,i,j,objval) shared(minFlux,maxFlux)
+		{
+			int iters = 0;
+			double wTime = omp_get_wtime();
+			tid=omp_get_thread_num();
+			if(tid==0){
+				nthreads=omp_get_num_threads();
+				if(rank==0){
+					printf("\nNumber of threads = %d, Number of CPUs = %d\n\n",nthreads,numprocs);
+				}
+			}
+			/* Create a copy of the LP for this thread */
+			glp_prob *lpi = glp_create_prob();
+			glp_copy_prob(lpi, lp, GLP_OFF);
+			
+			glp_smcp parm;
+			glp_init_smcp(&parm);
+			parm.msg_lev = GLP_MSG_OFF;
+			parm.meth = GLP_DUALP;
+			
+			for(j=-1;j<2;j+=2){
+				#pragma omp for schedule(runtime) nowait
+				for(i=rank*n/numprocs;i<(rank+1)*n/numprocs;i++){
+					/* GLPK columns are 1-based: rxns[i] is 0-based, so +1 */
+					int col = rxns[i] + 1;
+					glp_set_obj_dir(lpi, (j==-1) ? GLP_MAX : GLP_MIN);
+					iters++;
+					glp_set_obj_coef(lpi, col, 1.0);
+					glp_simplex(lpi, &parm);
+					objval = glp_get_obj_val(lpi);
+					if(j==-1){
+						maxFlux[i] = objval;
+					}else{
+						minFlux[i] = objval;
+					}
+					glp_set_obj_coef(lpi, col, 0.0);
+				}	
+			}	
+			
+			wTime = omp_get_wtime() - wTime;
+			printf("Thread %d/%d of process %d/%d did %d iterations in %f s\n",omp_get_thread_num(),omp_get_num_threads(),rank+1,numprocs,iters,wTime);
+			glp_delete_prob(lpi);
+		}
+}
+
+#else /* CPLEX */
+
 void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double *maxFlux, int rank, int numprocs, int *rxns){
 	/* The actual Open MP FVA called with CPLEX env, CPLEX LP
 	the optimal LP solution and n the number of rows
@@ -90,6 +151,8 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double 
 		}
 }
 
+#endif /* USE_GLPK */
+
 int main (int argc, char **argv){
 	int status = 0;
 	double elapsedTime;
@@ -100,21 +163,25 @@ int main (int argc, char **argv){
 	double objval, robjval, zero=0;
 	int    solstat,nAll;
 	int cnt=1;
+#ifdef USE_GLPK
+	glp_prob *lp = NULL;
+#else
 	CPXENVptr     env = NULL;//CPLEX environment
 	CPXLPptr      lp = NULL;//LP problem
+#endif
 	int           curpreind,i,j,m,n,scaling=0;
 	const double tol = 1.0e-6;//tolerance for the optimisation problem
-	double optPerc = 0.9, *obj;
+	double optPerc = 0.9, *obj = NULL;
 	int objInd;
 	char low='L';
-	double *minFlux, *maxFlux;
-	double *globalminFlux, *globalmaxFlux;
+	double *minFlux = NULL, *maxFlux = NULL;
+	double *globalminFlux = NULL, *globalmaxFlux = NULL;
 	int numprocs, rank, namelen;
 	char processor_name[MPI_MAX_PROCESSOR_NAME];
 	FILE *fp;
 	char fileName[100] = "output.csv";
 	char modelName[100];
-    int *rxns;
+    int *rxns = NULL;
 	
 	/*Initialize MPI*/
 	MPI_Init(&argc, &argv);
@@ -124,9 +191,10 @@ int main (int argc, char **argv){
 	
 	/*Check arg number*/
 	if (rank==0){
-		if(( argc == 2 ) | ( argc == 3 ) | (argc == 4) | (argc == 5)){
+		if(( argc == 2 ) || ( argc == 3 ) || (argc == 4) || (argc == 5)){
 			printf("\nThe model supplied is %s\n", argv[1]);
-			strcpy(modelName,argv[1]);
+			strncpy(modelName,argv[1],sizeof(modelName)-1);
+			modelName[sizeof(modelName)-1]='\0';
 		}else if( argc > 5) {
 			printf("Too many arguments supplied.\n");
 			goto TERMINATE;
@@ -136,6 +204,125 @@ int main (int argc, char **argv){
 		}
     	}
 	
+#ifdef USE_GLPK
+	/* Suppress terminal output from GLPK */
+	glp_term_out(GLP_OFF);
+	
+	/* Create and read the problem */
+	lp = glp_create_prob();
+	if ( lp == NULL ) {
+		fprintf (stderr, "Failed to create LP.\n");
+		goto TERMINATE;
+	}
+	status = glp_read_mps(lp, GLP_MPS_FILE, NULL, argv[1]);
+	if ( status ) {
+		fprintf (stderr, "Failed to read MPS file.\n");
+		goto TERMINATE;
+	}
+	
+	/*Sense of optimization - maximize*/
+	glp_set_obj_dir(lp, GLP_MAX);
+	
+	/*Scaling parameter*/
+	if ( argc >= 4 ) {
+		if (atoi(argv[3])==-1){
+			scaling = 1;
+			if(rank==0) printf("Scaling disabled\n");
+		}
+	}
+	
+	/*Read OptPercentage*/
+	if (argc > 2) {
+		optPerc=atoi(argv[2])/100.0;
+	}
+	
+	/* Optimize the problem and obtain solution. */
+	clock_gettime(CLOCK_REALTIME, &tmstart);
+	{
+		glp_smcp parm;
+		glp_init_smcp(&parm);
+		parm.msg_lev = GLP_MSG_OFF;
+		if (scaling) parm.presolve = GLP_OFF;
+		status = glp_simplex(lp, &parm);
+	}
+	if ( status ) {
+		fprintf (stderr, "Failed to optimize LP.\n");
+		goto TERMINATE;
+	}
+	
+	/*Problem size */
+	m = glp_get_num_rows(lp);
+	nAll = glp_get_num_cols(lp);
+	
+	/*Rxns to optimize */
+	if ( argc==5 ){
+		FILE *fpp;
+		int num, count = 0;
+		
+		fpp = fopen(argv[4], "r");
+		if (fpp == NULL) {
+			printf("Error opening file.\n");
+			return 1;
+		}
+		while (fscanf(fpp, "%d", &num) == 1) {
+			count++;
+		}
+		
+		rxns = (int *) malloc(count * sizeof(int));
+		fseek(fpp, 0, SEEK_SET);
+		
+		for (int i = 0; i < count; i++) {
+			fscanf(fpp, "%d", &rxns[i]);
+		}
+		n = count;
+		fclose(fpp);
+	}else{
+		n = nAll;
+		rxns = (int*)calloc(n, sizeof(int));
+		for (int i=0; i < n; i++){
+			rxns[i]=i;
+		}
+	}
+	
+	/*Get objective value*/
+	objval = glp_get_obj_val(lp);
+	solstat = glp_get_status(lp);
+	robjval = floor(objval/tol)*tol*optPerc;
+	
+	/*Look for the index of the objective (0-based internally)*/
+	objInd = -1;
+	for(i=0;i<nAll;i++){
+		if(glp_get_obj_coef(lp, i+1) != 0.0){  /* GLPK is 1-based */
+			objInd = i;
+		}		
+	}
+	
+	/* Write the output to the screen. */
+	if(rank==0){
+		printf ("Solution value  = %f\n", objval);
+		printf ("Solution status = %d\n", solstat);
+		printf ("Solving %d reactions !\n", n);
+		printf("Objective index is %d\n",objInd);
+		
+		if (optPerc*100 != -1) {
+			printf("\nRunning biased FVA- setting lower bound of objective to %.f%% of optimal value!\n",optPerc*100);
+			printf("Rounded solution at %.f%% is %f\n",optPerc*100,robjval);
+		} else {
+			printf("\nRunning regular FVA- keeping objective bounds as found in model!");
+		}
+	}
+	
+	/* Set lower bound of objective reaction to fraction of optimum */
+	if (optPerc*100 != -1) {
+		double curUb = glp_get_col_ub(lp, objInd+1);
+		glp_set_col_bnds(lp, objInd+1, GLP_DB, robjval, curUb);
+	}
+	
+	/*Set the objective coefficient to zero*/
+	glp_set_obj_coef(lp, objInd+1, 0.0);
+
+#else /* CPLEX */
+
 	/* Initialize the CPLEX environment */
 	env = CPXopenCPLEX (&status);
 	if ( env == NULL ) {
@@ -153,13 +340,6 @@ int main (int argc, char **argv){
                	"Failure to turn on screen indicator, error %d.\n", status);
       		goto TERMINATE;
 	}
-	
-	/* Turn on data checking */
-	/*status = CPXsetintparam (env, CPXPARAM_Read_DataCheck, CPX_ON);
-	if ( status ) {
-		fprintf (stderr, "Failure to turn on data checking, error %d.\n", status);
-		goto TERMINATE;
-	}*/
 	
 	/* Create the problem. */
 	lp = CPXcreateprob (env, &status, "Problem");
@@ -183,7 +363,7 @@ int main (int argc, char **argv){
 	status = CPXsetintparam (env, CPX_PARAM_AUXROOTTHREADS, 2);
 	
 	/*Scaling parameter if coupled model*/
-	if ( argc == 4 ) {
+	if ( argc >= 4 ) {
 		if (atoi(argv[3])==-1){
 		/*Change of scaling parameter*/
 		scaling = 1;
@@ -211,7 +391,6 @@ int main (int argc, char **argv){
 	nAll = CPXgetnumcols (env, lp);
         /*Rxns to optimize */
         if ( argc==5 ){
-            rxns = (int*)calloc(nAll, sizeof(int));//realloc this
             int readFile=1;
             if ( readFile==1 ) {
                 FILE *fpp;
@@ -284,6 +463,8 @@ int main (int argc, char **argv){
 	/*Set the objective coefficient to zero*/
 	status = CPXchgobj (env, lp, cnt, &objInd, &zero);
 	
+#endif /* USE_GLPK - end of solver-specific setup */
+
 	/*Dynamically allocate result vector*/
 	minFlux = (double*)calloc(n, sizeof(double));
 	maxFlux = (double*)calloc(n, sizeof(double));
@@ -301,14 +482,6 @@ int main (int argc, char **argv){
 	MPI_Allreduce(minFlux, globalminFlux, n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 	MPI_Allreduce(maxFlux, globalmaxFlux, n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
-	
-	/* Print results*/
-	/*if(rank==0){
-		for(i=0;i<n;i++){//print results and status 
-			printf("Min %d is %.2f status is %.1f \n",i,globalminFlux[i],globalminsolStat[i]);
-			printf("Max %d is %.2f status is %.1f \n",i,globalmaxFlux[i],globalmaxsolStat[i]);
-		}
-	}*/
 	
 	/*Save to csv file*/
         if(rank==0){
@@ -333,6 +506,12 @@ int main (int argc, char **argv){
 	MPI_Finalize();
 	
 TERMINATE:
+#ifdef USE_GLPK
+	if ( lp != NULL ) {
+		glp_delete_prob(lp);
+		lp = NULL;
+	}
+#else
    	/* Free up the problem as allocated by CPXcreateprob, if necessary */
 	if ( lp != NULL ) {
 		status = CPXfreeprob (env, &lp);
@@ -351,9 +530,16 @@ TERMINATE:
 			fprintf (stderr, "%s", errmsg);
 		}
 	}
+#endif
 	free_and_null ((char **) &cost);
 	free_and_null ((char **) &lb);
 	free_and_null ((char **) &ub);
+	free_and_null ((char **) &obj);
+	free_and_null ((char **) &rxns);
+	free_and_null ((char **) &minFlux);
+	free_and_null ((char **) &maxFlux);
+	free_and_null ((char **) &globalminFlux);
+	free_and_null ((char **) &globalmaxFlux);
 	return (status);
 }  /* END main */
 

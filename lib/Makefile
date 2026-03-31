@@ -1,6 +1,9 @@
 SYSTEM     = x86-64_linux
 LIBFORMAT  = static_pic
 
+# Solver selection: set SOLVER=glpk to use GLPK, default is cplex
+SOLVER ?= cplex
+
 #------------------------------------------------------------
 #
 # When you adapt this makefile to compile your CPLEX programs
@@ -16,6 +19,10 @@ ifndef TRAVIS
 else
 	CPLEXDIR       = /home/travis/travis/cplex
 endif
+
+# GLPK paths (override as needed)
+GLPKINCDIR ?= /usr/include
+GLPKLIBDIR ?= /usr/lib
 
 # ---------------------------------------------------------------------
 # Compiler selection 
@@ -38,34 +45,26 @@ CCOPT = -m64 -O -fPIC -fno-strict-aliasing -fexceptions -DNDEBUG -DIL_STD
 # Link options and libraries
 # ---------------------------------------------------------------------
 
+ifeq ($(SOLVER),glpk)
+CFLAGS  = $(COPT) -DUSE_GLPK -I$(GLPKINCDIR)
+CLNDIRS = -L$(GLPKLIBDIR)
+CLNFLAGS = -lglpk -lm -lpthread
+else
 CPLEXBINDIR   = $(CPLEXDIR)/bin/$(BINDIST)
 CPLEXJARDIR   = $(CPLEXDIR)/lib/cplex.jar
 CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
-
-
-CLNDIRS   = -L$(CPLEXLIBDIR)
+CPLEXINCDIR   = $(CPLEXDIR)/include
+CFLAGS  = $(COPT) -I$(CPLEXINCDIR)
+CLNDIRS = -L$(CPLEXLIBDIR)
 CCLNFLAGS = -lconcert -lilocplex -lcplex -lm -lpthread
 CLNFLAGS  = -lcplex -lm -lpthread -lrt -ldl
+endif
 
+EXSRCC = ./
 
 
 ll:
 	make all_c
-
-#execute: all
-#	make execute_c
-
-
-CPLEXINCDIR   = $(CPLEXDIR)/include
-
-EXDIR         = $(CPLEXDIR)/examples
-EXINC         = $(EXDIR)/include
-EXDATA        = $(EXDIR)/data
-EXSRCC        = $(EXDIR)/src/c
-EXSRCC        = ./
-
-
-CFLAGS  = $(COPT)  -I$(CPLEXINCDIR)
 
 #------------------------------------------------------------
 #  make all      : to compile the examples. 
