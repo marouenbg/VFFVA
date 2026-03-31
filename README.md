@@ -1,5 +1,6 @@
 [![DOI](https://zenodo.org/badge/142482470.svg)](https://zenodo.org/badge/latestdoi/142482470)
 [![CI](https://github.com/marouenbg/VFFVA/actions/workflows/ci.yml/badge.svg)](https://github.com/marouenbg/VFFVA/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/marouenbg/VFFVA/branch/master/graph/badge.svg)](https://codecov.io/gh/marouenbg/VFFVA)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/marouenbg/ACHR.cu/blob/master/LICENSE.txt)
 
 This repository provides the code and result figures with the paper:

@@ -45,6 +45,11 @@ else
 	CC  = mpicc -O3 -fopenmp
 endif
 
+# Optional: compile with coverage (set COVERAGE=1)
+ifdef COVERAGE
+	CC += --coverage
+endif
+
 # ---------------------------------------------------------------------
 # Compiler options 
 # ---------------------------------------------------------------------
