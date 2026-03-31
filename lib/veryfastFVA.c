@@ -37,53 +37,57 @@ static void
 
 #ifdef USE_GLPK
 
+/* GLPK is not thread-safe: its internal memory allocator uses global state.
+   Concurrent glp_simplex calls from OpenMP threads corrupt memory.
+   We disable OpenMP for GLPK and rely on MPI-only parallelism. */
 void fva(glp_prob *lp, double objval, int n, int scaling, double *minFlux, double *maxFlux, int rank, int numprocs, int *rxns){
-	int i,j,tid,nthreads;
+	int i,j,ret,solst;
+	int iters = 0;
+	double wTime = omp_get_wtime();
 	
-	/*optimisation loop Max:j=-1(GLP_MAX) Min:j=+1(GLP_MIN)*/
-	#pragma omp parallel private(tid,i,j,objval) shared(minFlux,maxFlux)
-		{
-			int iters = 0;
-			double wTime = omp_get_wtime();
-			tid=omp_get_thread_num();
-			if(tid==0){
-				nthreads=omp_get_num_threads();
-				if(rank==0){
-					printf("\nNumber of threads = %d, Number of CPUs = %d\n\n",nthreads,numprocs);
-				}
+	if(rank==0){
+		printf("\nNumber of threads = 1 (GLPK: MPI-only), Number of CPUs = %d\n\n",numprocs);
+	}
+	
+	/* Create a single working copy of the LP */
+	glp_prob *lpi = glp_create_prob();
+	glp_copy_prob(lpi, lp, GLP_OFF);
+	
+	glp_smcp parm;
+	glp_init_smcp(&parm);
+	parm.msg_lev = GLP_MSG_OFF;
+	parm.meth = GLP_DUALP;
+	
+	for(j=-1;j<2;j+=2){
+		for(i=rank*n/numprocs;i<(rank+1)*n/numprocs;i++){
+			/* GLPK columns are 1-based: rxns[i] is 0-based, so +1 */
+			int col = rxns[i] + 1;
+			glp_set_obj_dir(lpi, (j==-1) ? GLP_MAX : GLP_MIN);
+			iters++;
+			glp_set_obj_coef(lpi, col, 1.0);
+			ret = glp_simplex(lpi, &parm);
+			if (ret != 0) {
+				fprintf(stderr, "Warning: glp_simplex failed (ret=%d) on rxn %d, direction %s\n",
+					ret, rxns[i], (j==-1)?"max":"min");
 			}
-			/* Create a copy of the LP for this thread */
-			glp_prob *lpi = glp_create_prob();
-			glp_copy_prob(lpi, lp, GLP_OFF);
-			
-			glp_smcp parm;
-			glp_init_smcp(&parm);
-			parm.msg_lev = GLP_MSG_OFF;
-			parm.meth = GLP_DUALP;
-			
-			for(j=-1;j<2;j+=2){
-				#pragma omp for schedule(runtime) nowait
-				for(i=rank*n/numprocs;i<(rank+1)*n/numprocs;i++){
-					/* GLPK columns are 1-based: rxns[i] is 0-based, so +1 */
-					int col = rxns[i] + 1;
-					glp_set_obj_dir(lpi, (j==-1) ? GLP_MAX : GLP_MIN);
-					iters++;
-					glp_set_obj_coef(lpi, col, 1.0);
-					glp_simplex(lpi, &parm);
-					objval = glp_get_obj_val(lpi);
-					if(j==-1){
-						maxFlux[i] = objval;
-					}else{
-						minFlux[i] = objval;
-					}
-					glp_set_obj_coef(lpi, col, 0.0);
-				}	
-			}	
-			
-			wTime = omp_get_wtime() - wTime;
-			printf("Thread %d/%d of process %d/%d did %d iterations in %f s\n",omp_get_thread_num(),omp_get_num_threads(),rank+1,numprocs,iters,wTime);
-			glp_delete_prob(lpi);
+			solst = glp_get_status(lpi);
+			if (solst != GLP_OPT) {
+				fprintf(stderr, "Warning: non-optimal status %d on rxn %d, direction %s\n",
+					solst, rxns[i], (j==-1)?"max":"min");
+			}
+			objval = glp_get_obj_val(lpi);
+			if(j==-1){
+				maxFlux[i] = objval;
+			}else{
+				minFlux[i] = objval;
+			}
+			glp_set_obj_coef(lpi, col, 0.0);
 		}
+	}
+	
+	wTime = omp_get_wtime() - wTime;
+	printf("Process %d/%d did %d iterations in %f s\n",rank+1,numprocs,iters,wTime);
+	glp_delete_prob(lpi);
 }
 
 #else /* CPLEX */
@@ -133,7 +137,7 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double 
 					status = CPXchgobj (env, lpi, cnt, &rxns[i], &one);//change obj index
 					status = CPXlpopt (env, lpi);//solve LP
 					status = CPXgetobjval(env, lpi, &objval);
-					solstat = (double)CPXgetstat(env, lpi);
+					solstat = CPXgetstat(env, lpi);
 					//save results
 					if(j==-1){//save results
 						maxFlux[i]   =objval;
@@ -148,6 +152,16 @@ void fva(CPXLPptr lp, double objval, int n, int scaling, double *minFlux,double 
 			
 			wTime = omp_get_wtime() - wTime;
 			printf("Thread %d/%d of process %d/%d did %d iterations in %f s\n",omp_get_thread_num(),omp_get_num_threads(),rank+1,numprocs,iters,wTime);
+			
+			/* Free per-thread CPLEX resources */
+			if ( lpi != NULL ) {
+				CPXfreeprob(env, &lpi);
+				lpi = NULL;
+			}
+			if ( env != NULL ) {
+				CPXcloseCPLEX(&env);
+				env = NULL;
+			}
 		}
 }
 
@@ -179,8 +193,8 @@ int main (int argc, char **argv){
 	int numprocs, rank, namelen;
 	char processor_name[MPI_MAX_PROCESSOR_NAME];
 	FILE *fp;
-	char fileName[100] = "output.csv";
-	char modelName[100];
+	char modelName[512];
+	char outputPath[512];
     int *rxns = NULL;
 	
 	/*Initialize MPI*/
@@ -425,7 +439,7 @@ int main (int argc, char **argv){
 
 	/*Round objective value*/
 	status = CPXgetobjval(env, lp, &objval);
-	solstat = (double)CPXgetstat(env, lp);
+	solstat = CPXgetstat(env, lp);
 	if ( status ) {
       		fprintf (stderr, "Failed to obtain solution.\n");
       		goto TERMINATE;
@@ -485,11 +499,14 @@ int main (int argc, char **argv){
 	
 	/*Save to csv file*/
         if(rank==0){
-            for(i=strlen(modelName)-4;i<strlen(modelName);i++){
-	  	    modelName[i]=0;
-	    }
-	    strcat(modelName, fileName);
-            fp=fopen(modelName,"w+");
+            /* Build output path: strip .mps extension, append output.csv */
+            {
+                size_t len = strlen(modelName);
+                if (len >= 4 && strcmp(&modelName[len-4], ".mps") == 0)
+                    modelName[len-4] = '\0';
+                snprintf(outputPath, sizeof(outputPath), "%soutput.csv", modelName);
+            }
+            fp=fopen(outputPath,"w+");
 	    fprintf(fp,"minFlux,maxFlux\n");
 		for(i=0;i<n;i++){
 			fprintf(fp,"%f,%f\n",globalminFlux[i],globalmaxFlux[i]);

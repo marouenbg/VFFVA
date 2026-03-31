@@ -1,4 +1,15 @@
-SYSTEM     = x86-64_linux
+UNAME_S := $(shell uname -s)
+UNAME_M := $(shell uname -m)
+
+ifeq ($(UNAME_S),Darwin)
+  ifeq ($(UNAME_M),arm64)
+    SYSTEM    = arm64_osx
+  else
+    SYSTEM    = x86-64_osx
+  endif
+else
+  SYSTEM    = x86-64_linux
+endif
 LIBFORMAT  = static_pic
 
 # Solver selection: set SOLVER=glpk to use GLPK, default is cplex
@@ -14,22 +25,30 @@ SOLVER ?= cplex
 
 ifndef TRAVIS
 	#Please define CPLEX path here
-	CPLEXDIR      = $(HOME)/CPLEX_Studio1210/cplex
-	#CPLEXDIR      = /work/projects/cplex/soft/cplex/12.6.3/cplex/
+	CPLEXDIR      = $(HOME)/Applications/CPLEX_Studio2212/cplex
 else
 	CPLEXDIR       = /home/travis/travis/cplex
 endif
 
 # GLPK paths (override as needed)
+ifeq ($(UNAME_S),Darwin)
+GLPKINCDIR ?= /opt/homebrew/include
+GLPKLIBDIR ?= /opt/homebrew/lib
+else
 GLPKINCDIR ?= /usr/include
 GLPKLIBDIR ?= /usr/lib
+endif
 
 # ---------------------------------------------------------------------
 # Compiler selection 
 # ---------------------------------------------------------------------
 
 ifndef TRAVIS
+  ifeq ($(UNAME_S),Darwin)
+	CC  = mpicc -O3 -Xclang -fopenmp -I/opt/homebrew/opt/libomp/include -L/opt/homebrew/opt/libomp/lib -lomp
+  else
 	CC  = mpicc -O3 -fopenmp
+  endif
 else
 	CC  = mpicc -O3 -fopenmp -coverage
 endif
@@ -57,7 +76,11 @@ CPLEXINCDIR   = $(CPLEXDIR)/include
 CFLAGS  = $(COPT) -I$(CPLEXINCDIR)
 CLNDIRS = -L$(CPLEXLIBDIR)
 CCLNFLAGS = -lconcert -lilocplex -lcplex -lm -lpthread
+ifeq ($(UNAME_S),Darwin)
+CLNFLAGS  = -lcplex -lm -lpthread -ldl
+else
 CLNFLAGS  = -lcplex -lm -lpthread -lrt -ldl
+endif
 endif
 
 EXSRCC = ./
