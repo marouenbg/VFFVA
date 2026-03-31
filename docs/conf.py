@@ -24,9 +24,9 @@ copyright = u'2019, Marouen Ben Guebila'
 author = u'Marouen Ben Guebila'
 
 # The short X.Y version
-version = u''
+version = u'0.5'
 # The full version, including alpha/beta/rc tags
-release = u'v0.1'
+release = u'v0.5.0'
 
 
 # -- General configuration ---------------------------------------------------

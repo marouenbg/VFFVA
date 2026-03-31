@@ -4,7 +4,10 @@ The following provides the usage guide for both the C and MATLAB versions of VFF
 
 ## C version
 
-After installing the dependencies of `VFFVA`, you can build the binaries at the root of `lib` using `make`.
+After installing the dependencies of `VFFVA`, you can build the binaries at the root of `lib`:
+
++ With CPLEX (default): `make`
++ With GLPK: `make SOLVER=glpk`
 
 Then call `VFFVA` as follows:
 
@@ -26,6 +29,10 @@ scaling is usually desactivated with tightly constrained metabolic model such as
 
 + ex: .csv file containing 0-based indices of reactions to optimize e.g., 0,1,2,3,4,5 or check `rxns.csv` in the repository.
 
+**Note:** When built with GLPK (`make SOLVER=glpk`), the binary is named `veryfastFVA` and is used the same way.
+GLPK does not support OpenMP (GLPK is not thread-safe), so parallelism is MPI-only.
+The `OMP_NUM_THREADS` and scheduling parameters are ignored in GLPK mode.
+
 Example: `mpirun -np 2 --bind-to none -x OMP_NUM_THREADS=4 veryfastFVA ecoli_core.mps`
 
 `VFFVA` will perform 2n Linear Programs (LP), where n is the number of reactions in a metabolic model, corresponding to
@@ -43,7 +50,7 @@ Then VFFVA.m can be called from MATLAB using the following function description:
 
    USAGE:
 
-      [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc)
+      [minFlux,maxFlux]=VFFVA(nCores, nThreads, model, scaling, memAff, schedule, nChunk, optPerc, ex, solver)
 
    INPUT:
       nCores:           Number of non-shared memory cores/machines.
@@ -65,6 +72,7 @@ Then VFFVA.m can be called from MATLAB using the following function description:
        nChunk:          Number of reactions in each chunk (Default = 50). This is an OpenMP parameter, more
                         information here: https://software.intel.com/en-us/articles/openmp-loop-scheduling
        ex:              0-based indices of reactions to optimize. (Default, all reactions)
+       solver:          'cplex' or 'glpk'. (Default = 'cplex'). Selects which compiled binary to use.
 
    OUTPUTS:
       minFlux:          (n,1) vector of minimal flux values for each reaction.
@@ -96,6 +104,7 @@ Then VFFVA.py can be imported into a Python 3 script  using the following functi
     :param optPerc:  Percentage of the optimal objective used in FVA. Integer between 0 and 100. For example, when set to 90
                      FVA will be computed on 90% of the optimal objective.
     :param ex:       0-based indices of reactions to optimize as a numpy array.  (Default, all reactions)
+    :param solver:   'cplex' or 'glpk'. (Default = 'cplex'). Selects which compiled binary to use.
     :return:
            minFlux:          (n,1) vector of minimal flux values for each reaction.
            maxFlux:          (n,1) vector of maximal flux values for each reaction.

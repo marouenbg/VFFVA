@@ -9,6 +9,7 @@ Contact: marouen.b.guebila [AT] gmail.com
 
 #### Description
 VFFVA performs flux variability analysis (FVA) on genome-scale metabolic models.
+It supports two LP solver backends: IBM CPLEX and GLPK.
 
 #### Files and folders
 Makefile
@@ -25,17 +26,32 @@ VFFVA uses the `.mps` linear programming format.
 You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP problems to `.mps` files
 
 #### Installation:
-1. Install a free academic version of IBM ILOG CPLEX.
+1. Install a solver:
 
-	http://www-03.ibm.com/software/products/fr/ibmilogcpleoptistud
+   **Option A: IBM CPLEX** (default)
 
-2. Check if you have openMP and MPI installed on your system. Usually, openMP comes by default with latest gcc distributions.
+   http://www-03.ibm.com/software/products/fr/ibmilogcpleoptistud
 
-	For MPI, Install the distribution openMPI 1.10.3 
+   Free academic version available.
 
-3. In the `Makefile`, change the CPLEXDIR variable to point to the installation directory of IBM ILOG CPLEX
+   **Option B: GLPK** (free, open-source)
 
-4. make
+   + Ubuntu/Debian: `sudo apt-get install libglpk-dev`
+   + macOS: `brew install glpk`
+
+2. Check if you have OpenMP and MPI installed on your system. Usually, OpenMP comes by default with latest gcc distributions.
+
+	For MPI, install the OpenMPI distribution (tested with 1.10.3 and 5.0.9).
+
+	On macOS, install via Homebrew: `brew install open-mpi libomp`
+
+3. In the `Makefile`, change the CPLEXDIR variable to point to the installation directory of IBM ILOG CPLEX (only needed for CPLEX builds).
+
+4. Build:
+   + With CPLEX: `make`
+   + With GLPK: `make SOLVER=glpk`
+
+   The Makefile auto-detects the platform (Linux/macOS, x86-64/ARM64).
 
 5. Bind OpenMP threads to physical cores by setting the environment variable
 `export OMP_BIND_PROC = TRUE`
@@ -66,7 +82,9 @@ You can use the provided MATLAB script `convertProblem.m` to convert MATLAB LP p
 
         f: (optional) .csv file containing the indices of the reactions to optimize.
 
-	with openMPI 1.10.2 you might get error messages, launch the application as following:
+	**Note:** When built with GLPK (`make SOLVER=glpk`), use the same command.
+	GLPK mode uses MPI-only parallelism (GLPK is not thread-safe), so
+	`OMP_NUM_THREADS` and scheduling parameters are ignored.
 
 	`mpirun -np  -mca btl openib --bind-to none -x OMP_NUM_THREADS= ./veryfastFVA ./models/.mps `
 

@@ -1,20 +1,22 @@
 # Installation guide
 
-VFFVA is supported in Linux systms in both C and MATLAB.
+VFFVA is supported on Linux and macOS in C, MATLAB, and Python.
 
 ## C
 
-The C implementation is a hybrid MPI/OpenMP code that has two levels of parallelism in both shared memory
-and non-shared memory systems.
+The C implementation uses MPI for inter-node parallelism and OpenMP for intra-node parallelism (CPLEX backend)
+or MPI-only parallelism (GLPK backend).
 
 ### Requirements
-+ Linux-based system (tested on Ubuntu 16.04, 18.04, and 22.04).
++ Linux-based system (tested on Ubuntu 16.04, 18.04, and 22.04) or macOS (tested on macOS ARM64).
 
-+ IBM CPLEX 12.6.3. (tested on 12.6.3, 12.10, and 22.1.0) and above [Free academic version.](http://www.ibm.com/academic)
++ **Solver (one of the following):**
+  + IBM CPLEX 12.6.3 and above (tested on 12.6.3, 12.10, and 22.1.2) [Free academic version.](http://www.ibm.com/academic)
+  + GLPK 4.65 and above (tested on 5.0) — free and open-source.
 
-+ OpenMP comes be default in the latest gcc version (For macOs, OpenMp has to be installed separately)
++ OpenMP comes by default in the latest gcc version. On macOS, install `libomp` via Homebrew: `brew install libomp`.
 
-+ MPI through the OpenMPI 1.10.3 implementation.
++ MPI through the OpenMPI implementation (tested on 1.10.3 and 5.0.9).
 
 ### Installation
 You need to download and install 1) OpenMPI and 2) IBM CPLEX for 64-bit machines.
@@ -73,7 +75,15 @@ export PS1=">"
 ```
 Then, make sure that the CPLEXDIR path in `lib/Makefile` corresponds to the installation folder of CPLEX (~/CPLEX_Studio1210 in the previous example).
 
-+ Once the required dependencies installed, `cd VFFVA/lib` then `make` at the root of `lib`.
++ **GLPK** (alternative to CPLEX): Install via your package manager:
+  + Ubuntu/Debian: `sudo apt-get install libglpk-dev`
+  + macOS: `brew install glpk`
+
++ Once the required dependencies are installed, `cd VFFVA/lib` then build:
+  + With CPLEX (default): `make`
+  + With GLPK: `make SOLVER=glpk`
+
+The Makefile auto-detects the platform (Linux/macOS, x86-64/ARM64) and sets the appropriate library paths.
 
 + Alternatively, you can open an issue [here](https://github.com/marouenbg/VFFVA/issues).
 
@@ -82,15 +92,15 @@ Then, make sure that the CPLEXDIR path in `lib/Makefile` corresponds to the inst
 VFFVA.m is the MATLAB implementation that consists of a wrapper around the C version.
 
 ### Requirements
-+ Linux-based system.
++ Linux or macOS.
 
 + MATLAB
 
-+ IBM CPLEX 12.6.3. and above [Free academic version.](http://www.ibm.com/academic)
++ IBM CPLEX or GLPK (see C requirements above).
 
-+ OpenMP comes be default in the latest gcc version.
++ OpenMP comes by default in the latest gcc version. On macOS, install `libomp` via Homebrew.
 
-+ MPI through the OpenMPI 1.10.3 implementation.
++ MPI through the OpenMPI implementation.
 
 ### Installation
 
@@ -105,15 +115,15 @@ addpath(genpath('VFFVA'))
 VFFVA.py is the Python3 implementation that consists of a wrapper around the C version.
 
 ### Requirements
-+ Linux-based system.
++ Linux or macOS.
 
 + Python 3
 
-+ IBM CPLEX 12.6.3. and above [Free academic version.](http://www.ibm.com/academic)
++ IBM CPLEX or GLPK (see C requirements above).
 
-+ OpenMP comes be default in the latest gcc version.
++ OpenMP comes by default in the latest gcc version. On macOS, install `libomp` via Homebrew.
 
-+ MPI through the OpenMPI 1.10.3 implementation.
++ MPI through the OpenMPI implementation.
 
 ### Installation
 
@@ -122,7 +132,7 @@ First, istall the C version, then add the path of the installed C version to you
 ## FAQ
 
 - In MacOS, I get the error “Clang: Error: Unsupported Option ‘-Fopenmp’” Error
--> In MacOS, OpenMP is not provided by default, therefore you need to install it by updating to the latest version of llvm.
+-> In macOS, OpenMP is not provided by default. Install libomp via Homebrew: `brew install libomp`. The Makefile auto-detects macOS and uses the correct compiler flags.
 
 - Too many output arguments with function BuildMPS
 -> The version of BuildMPS function provided with VFFVA gives 2 outputs, if you have the COBRAtoolbox in your path, you might be using another version that gives 1 output.
